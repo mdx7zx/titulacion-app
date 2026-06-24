@@ -2,6 +2,10 @@
 
 App instalable de tarjetas de estudio para enfermería. Incluye sesiones de repaso, exámenes, progreso guardado en el dispositivo y minijuegos desbloqueables.
 
+## App publicada
+
+https://mdx7zx.github.io/titulacion-app/
+
 ## Abrirla
 
 Desde esta carpeta, ejecuta:
