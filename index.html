@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tarjetas de estudio · Titulación</title>
+<!-- ===== Modo app (PWA): pantalla completa, ícono y nombre ===== -->
+<meta name="application-name" content="Titulación">
+<meta name="apple-mobile-web-app-title" content="Titulación">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0E8A82">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF3F1;
+    --surface:#FFFFFF;
+    --ink:#19292C;
+    --ink-soft:#5C6E70;
+    --ink-faint:#8D9B9C;
+    --line:#DCE6E3;
+    --line-soft:#E8EFEC;
+    --primary:#0E8A82;
+    --primary-deep:#0A655F;
+    --primary-wash:#E2F1EF;
+    --accent:#E8814E;
+    --know:#2E9C6B;
+    --know-wash:#E4F3EC;
+    --mid:#C2882B;
+    --mid-wash:#F6ECD8;
+    --dont:#CF6A6A;
+    --dont-wash:#F7E5E5;
+    --radius:20px;
+    --shadow:0 1px 2px rgba(20,40,40,.04), 0 14px 40px -18px rgba(20,40,40,.28);
+    --shadow-soft:0 1px 2px rgba(20,40,40,.04), 0 8px 22px -16px rgba(20,40,40,.22);
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:560px;
+    margin:0 auto;
+    padding:max(20px,env(safe-area-inset-top)) 18px max(28px,env(safe-area-inset-bottom));
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  button:focus-visible{outline:2.5px solid var(--primary);outline-offset:2px;border-radius:12px;}
+
+  /* ---------- HOME ---------- */
+  .home-head{margin:6px 0 22px;}
+  .eyebrow{
+    font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--primary-deep);margin-bottom:10px;
+  }
+  h1{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:500;font-size:2rem;line-height:1.12;margin:0 0 8px;letter-spacing:-.01em;
+  }
+  .sub{color:var(--ink-soft);font-size:.96rem;margin:0;}
+
+  .progress-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px 16px;box-shadow:var(--shadow-soft);margin-bottom:18px;
+  }
+  .pc-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+  .pc-label{font-size:.82rem;color:var(--ink-soft);font-weight:500;}
+  .pc-num{font-family:"Fraunces",serif;font-size:1.05rem;color:var(--ink);}
+  .pc-num b{color:var(--primary-deep);font-weight:600;}
+  .bar{height:10px;background:var(--line-soft);border-radius:99px;overflow:hidden;display:flex;}
+  .bar > span{display:block;height:100%;transition:width .5s cubic-bezier(.2,.7,.2,1);}
+  .seg-master{background:var(--primary);}
+  .seg-prog{background:#9FD0CB;}
+  .legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+  .legend div{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--ink-soft);}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+
+  .cta{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    width:100%;background:var(--primary);color:#fff;border-radius:var(--radius);
+    padding:18px;font-weight:600;font-size:1.08rem;box-shadow:var(--shadow);
+    transition:transform .12s ease, background .15s ease;
+  }
+  .cta:hover{background:var(--primary-deep);}
+  .cta:active{transform:scale(.985);}
+  .cta small{font-weight:500;font-size:.8rem;opacity:.85;}
+  .cta-row{display:flex;gap:10px;margin-top:11px;}
+  .cta-row button{
+    flex:1;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:13px 10px;font-weight:600;font-size:.88rem;color:var(--ink);
+    box-shadow:var(--shadow-soft);transition:transform .12s ease,border-color .15s ease;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+  }
+  .cta-row button:hover{border-color:#C5D6D2;}
+  .cta-row button:active{transform:scale(.97);}
+  .cta-row button small{font-weight:500;font-size:.72rem;color:var(--ink-faint);}
+  .cta-row button:disabled{opacity:.45;cursor:default;transform:none;}
+
+  .section-label{
+    font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-faint);margin:26px 4px 12px;
+  }
+  .cats{display:flex;flex-direction:column;gap:8px;}
+  .cat{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:12px 14px;transition:transform .1s ease,border-color .15s ease;
+  }
+  .cat:hover{border-color:#C5D6D2;}
+  .cat:active{transform:scale(.99);}
+  .cat-bar{width:5px;align-self:stretch;border-radius:99px;flex:none;}
+  .cat-name{font-weight:600;font-size:.92rem;flex:1;}
+  .cat-meta{font-size:.76rem;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+  .cat-mini{height:5px;width:54px;background:var(--line-soft);border-radius:99px;overflow:hidden;flex:none;}
+  .cat-mini > span{display:block;height:100%;background:var(--primary);border-radius:99px;}
+
+  .reset{
+    margin:22px auto 4px;display:block;font-size:.8rem;color:var(--ink-faint);
+    text-decoration:underline;text-underline-offset:3px;background:none;
+  }
+  .reset:hover{color:var(--dont);}
+
+  /* ---------- STUDY ---------- */
+  .study{display:none;flex-direction:column;flex:1;}
+  .study.active{display:flex;}
+  .home.hidden{display:none;}
+
+  .topbar{display:flex;align-items:center;gap:12px;margin:2px 0 16px;}
+  .iconbtn{
+    width:40px;height:40px;border-radius:12px;background:var(--surface);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;flex:none;box-shadow:var(--shadow-soft);
+    transition:transform .1s ease;
+  }
+  .iconbtn:active{transform:scale(.94);}
+  .iconbtn svg{width:18px;height:18px;stroke:var(--ink);}
+  .sessbar{flex:1;}
+  .sessbar .bar{height:8px;}
+  .sesscount{font-size:.84rem;font-weight:600;color:var(--ink-soft);font-variant-numeric:tabular-nums;flex:none;min-width:42px;text-align:right;}
+
+  .cardstage{flex:1;display:flex;align-items:center;justify-content:center;perspective:1600px;padding:6px 0 4px;}
+  .flashcard{
+    width:100%;min-height:340px;position:relative;transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.2,.75,.2,1);cursor:pointer;
+  }
+  .flashcard.flipped{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    background:var(--surface);border:1px solid var(--line);border-radius:24px;
+    box-shadow:var(--shadow);padding:26px 24px;display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  .face::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--cat-color,var(--primary));}
+  .back{transform:rotateY(180deg);}
+  .chip{
+    align-self:flex-start;font-size:.7rem;font-weight:600;letter-spacing:.04em;
+    padding:5px 11px;border-radius:99px;margin-bottom:18px;
+    color:var(--cat-color,var(--primary-deep));
+    background:color-mix(in srgb, var(--cat-color,var(--primary)) 12%, white);
+  }
+  .face-label{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;}
+  .q-text{
+    font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:1.42rem;line-height:1.28;
+    color:var(--ink);letter-spacing:-.01em;flex:1;display:flex;align-items:center;
+  }
+  .a-text{
+    font-size:1.02rem;line-height:1.5;color:var(--ink);white-space:pre-wrap;flex:1;
+    overflow-y:auto;padding-right:2px;
+  }
+  .a-text::-webkit-scrollbar{width:6px;}
+  .a-text::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;}
+  .flip-hint{
+    display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--ink-faint);
+    margin-top:16px;font-weight:500;
+  }
+  .flip-hint svg{width:15px;height:15px;stroke:var(--ink-faint);}
+
+  .controls{margin-top:16px;min-height:62px;display:flex;align-items:center;}
+  .flip-cta{
+    width:100%;background:var(--ink);color:#fff;border-radius:16px;padding:16px;
+    font-weight:600;font-size:1rem;transition:transform .1s ease, background .15s;
+  }
+  .flip-cta:hover{background:#0f1d20;}
+  .flip-cta:active{transform:scale(.99);}
+  .rate-row{display:flex;gap:9px;width:100%;}
+  .rate{
+    flex:1;border-radius:16px;padding:13px 8px;font-weight:600;font-size:.9rem;
+    display:flex;flex-direction:column;align-items:center;gap:3px;border:1.5px solid;
+    transition:transform .1s ease, filter .15s;
+  }
+  .rate:active{transform:scale(.96);}
+  .rate small{font-weight:500;font-size:.68rem;opacity:.7;}
+  .rate.dont{color:var(--dont);border-color:var(--dont);background:var(--dont-wash);}
+  .rate.mid{color:var(--mid);border-color:var(--mid);background:var(--mid-wash);}
+  .rate.know{color:var(--know);border-color:var(--know);background:var(--know-wash);}
+  .rate:hover{filter:brightness(.97);}
+
+  /* ---------- DONE ---------- */
+  .done{display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:6px;}
+  .done.active{display:flex;}
+  .done-mark{
+    width:78px;height:78px;border-radius:50%;background:var(--know-wash);
+    display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+  }
+  .done-mark svg{width:38px;height:38px;stroke:var(--know);}
+  .done h2{font-family:"Fraunces",serif;font-weight:500;font-size:1.7rem;margin:0;}
+  .done p{color:var(--ink-soft);margin:2px 0 4px;max-width:330px;}
+  .done-stats{display:flex;gap:22px;margin:14px 0 20px;}
+  .done-stats div{display:flex;flex-direction:column;gap:2px;}
+  .done-stats b{font-family:"Fraunces",serif;font-size:1.5rem;font-weight:600;}
+  .done-stats span{font-size:.74rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;}
+  .done-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
+  .done-actions .cta{padding:15px;}
+  .ghost{
+    width:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:14px;font-weight:600;color:var(--ink);box-shadow:var(--shadow-soft);
+  }
+  .ghost:active{transform:scale(.98);}
+
+  @media (max-width:380px){
+    h1{font-size:1.75rem;} .q-text{font-size:1.28rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .flashcard{transition:none;}
+    .bar > span{transition:none;}
+    *{scroll-behavior:auto;}
+  }
+
+  /* ---------- SELECTOR DE SECCIÓN (MAZO) ---------- */
+  .deck-switch{display:flex;gap:8px;background:var(--line-soft);border-radius:14px;padding:5px;margin-bottom:18px;}
+  .deck-pill{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;
+    padding:9px 6px;border-radius:10px;font-weight:600;font-size:.9rem;color:var(--ink-soft);
+    transition:background .15s ease,color .15s ease,box-shadow .15s ease;
+  }
+  .deck-pill small{font-weight:500;font-size:.68rem;color:var(--ink-faint);}
+  .deck-pill.active{background:var(--surface);color:var(--primary-deep);box-shadow:var(--shadow-soft);}
+  .deck-pill.active small{color:var(--primary);}
+
+  /* ---------- CONTRARRELOJ ---------- */
+  .timer-toggle{
+    display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:11px 14px;box-shadow:var(--shadow-soft);
+  }
+  .timer-toggle .tt-knob{
+    flex:none;width:40px;height:24px;border-radius:99px;background:var(--line);position:relative;
+    transition:background .18s ease;
+  }
+  .timer-toggle .tt-knob::after{
+    content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(20,40,40,.25);transition:transform .18s ease;
+  }
+  .timer-toggle[aria-checked="true"] .tt-knob{background:var(--primary);}
+  .timer-toggle[aria-checked="true"] .tt-knob::after{transform:translateX(16px);}
+  .timer-toggle .tt-label{font-weight:600;font-size:.86rem;color:var(--ink);}
+  .timer-toggle[aria-checked="false"] .tt-label{color:var(--ink-faint);}
+
+  .quiz-timer{
+    flex:none;font-variant-numeric:tabular-nums;font-weight:700;font-size:.9rem;
+    color:var(--primary-deep);background:var(--primary-wash);border-radius:9px;
+    padding:5px 9px;min-width:46px;text-align:center;
+  }
+  .quiz-timer.warn{color:var(--dont);background:var(--dont-wash);animation:tpulse .9s ease-in-out infinite;}
+  .quiz-timer.hidden{display:none;}
+  @keyframes tpulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+
+  /* ---------- JUEGOS (PREMIOS) ---------- */
+  .games-cta{
+    display:flex;align-items:center;gap:12px;width:100%;margin-top:18px;
+    background:linear-gradient(135deg,#1b3b57,#0e2a40);color:#fff;border-radius:var(--radius);
+    padding:15px 16px;box-shadow:var(--shadow);transition:transform .12s ease,filter .15s ease;
+  }
+  .games-cta:hover{filter:brightness(1.08);}
+  .games-cta:active{transform:scale(.985);}
+  .gc-emoji{font-size:1.5rem;flex:none;}
+  .gc-text{flex:1;text-align:left;font-weight:600;font-size:1.02rem;display:flex;flex-direction:column;gap:2px;}
+  .gc-text small{font-weight:500;font-size:.74rem;opacity:.82;}
+  .stars-chip{
+    flex:none;font-weight:700;font-size:.9rem;color:#5a4a12;
+    background:#FFD66B;border-radius:9px;padding:5px 10px;white-space:nowrap;
+  }
+
+  .games{display:none;flex-direction:column;flex:1;}
+  .games.active{display:flex;}
+  .gameview{display:none;flex-direction:column;flex:1;}
+  .gameview.active{display:flex;}
+  .games-head{flex:1;font-family:"Fraunces",serif;font-size:1.05rem;color:var(--ink);}
+  .games-intro{color:var(--ink-soft);font-size:.9rem;margin:2px 2px 16px;}
+  .games-list{display:flex;flex-direction:column;gap:12px;}
+  .game-card{
+    display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:14px;box-shadow:var(--shadow-soft);transition:transform .1s ease,border-color .15s ease;
+  }
+  .game-card:not(.locked):hover{border-color:var(--primary);}
+  .game-card:not(.locked):active{transform:scale(.99);}
+  .game-card.locked{opacity:.72;}
+  .gcd-icon{flex:none;width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;}
+  .gcd-body{flex:1;min-width:0;}
+  .gcd-name{font-weight:700;font-size:1rem;color:var(--ink);margin-bottom:2px;}
+  .gcd-desc{font-size:.8rem;color:var(--ink-soft);line-height:1.35;}
+  .gcd-state{flex:none;font-size:.78rem;font-weight:700;text-align:center;min-width:62px;}
+  .gcd-state .play{color:#fff;background:var(--primary);border-radius:10px;padding:8px 10px;display:inline-block;}
+  .gcd-state .lock{color:var(--ink-faint);}
+  .gcd-state .lock b{display:block;color:var(--mid);font-size:.95rem;}
+
+  /* área de juego */
+  .game-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:8px 0;}
+  .game-foot{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;}
+  .game-msg{font-size:.95rem;color:var(--ink-soft);}
+  .game-big{font-family:"Fraunces",serif;font-size:2rem;color:var(--ink);font-weight:600;}
+  .game-btn{background:var(--primary);color:#fff;border-radius:14px;padding:13px 22px;font-weight:600;font-size:1rem;box-shadow:var(--shadow);}
+  .game-btn:active{transform:scale(.97);}
+  .game-btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:var(--shadow-soft);}
+  .game-prompt{font-size:1rem;color:var(--ink-soft);text-align:center;}
+
+  /* rejilla de colores (color diferente) */
+  .swatch-grid{display:grid;gap:6px;width:min(86vw,360px);}
+  .swatch{aspect-ratio:1;border-radius:9px;border:none;cursor:pointer;transition:transform .08s ease;}
+  .swatch:active{transform:scale(.95);}
+
+  /* botones de color (simon / stroop) */
+  .color-pad{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:min(78vw,280px);}
+  .color-pad.three{grid-template-columns:repeat(3,1fr);}
+  .pad-btn{aspect-ratio:1;border-radius:16px;border:none;cursor:pointer;opacity:.78;transition:opacity .12s ease,transform .08s ease;box-shadow:var(--shadow-soft);}
+  .pad-btn.lit{opacity:1;transform:scale(1.04);}
+  .pad-btn:active{transform:scale(.96);}
+
+  /* opciones (cálculo / stroop) */
+  .opt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:min(86vw,360px);}
+  .opt-grid .game-opt{
+    background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;
+    font-weight:700;font-size:1.15rem;color:var(--ink);box-shadow:var(--shadow-soft);transition:transform .08s ease,border-color .12s ease;
+  }
+  .opt-grid .game-opt:active{transform:scale(.97);}
+  .opt-grid .game-opt.ok{border-color:var(--know);background:var(--know-wash);}
+  .opt-grid .game-opt.no{border-color:var(--dont);background:var(--dont-wash);}
+  .stroop-word{font-weight:800;font-size:2.6rem;letter-spacing:.01em;}
+  .game-timebar{width:min(86vw,360px);height:8px;background:var(--line-soft);border-radius:99px;overflow:hidden;}
+  .game-timebar > span{display:block;height:100%;background:var(--primary);transition:width .25s linear;}
+
+  /* ---------- QUIZ / MODO EXAMEN ---------- */
+  .cta-quiz{background:var(--ink);margin-top:11px;}
+  .cta-quiz:hover{background:#0f2024;}
+
+  .quiz{display:none;flex-direction:column;flex:1;}
+  .quiz.active{display:flex;}
+  .quiz-body{flex:1;display:flex;flex-direction:column;padding:6px 2px 0;}
+  .quiz-score{float:right;color:var(--ink-faint);font-weight:600;letter-spacing:0;text-transform:none;}
+  .quiz-q{
+    font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:1.4rem;line-height:1.25;
+    letter-spacing:-.01em;margin:6px 0 18px;color:var(--ink);
+  }
+  @media (max-width:380px){ .quiz-q{font-size:1.26rem;} }
+  .quiz-opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    background:var(--surface);border:1.5px solid var(--line);border-radius:15px;
+    padding:15px 15px;font-weight:500;font-size:1rem;color:var(--ink);line-height:1.35;
+    box-shadow:var(--shadow-soft);transition:transform .1s ease,border-color .15s ease,background .15s ease;
+  }
+  .opt:not(:disabled):hover{border-color:var(--primary);}
+  .opt:not(:disabled):active{transform:scale(.99);}
+  .opt .opt-key{
+    flex:none;width:26px;height:26px;border-radius:8px;background:var(--primary-wash);
+    color:var(--primary-deep);font-weight:700;font-size:.85rem;display:flex;
+    align-items:center;justify-content:center;
+  }
+  .opt .opt-mark{flex:none;margin-left:auto;width:22px;height:22px;display:none;}
+  .opt .opt-mark svg{width:22px;height:22px;}
+  .opt.is-correct{border-color:var(--know);background:var(--know-wash);}
+  .opt.is-correct .opt-key{background:var(--know);color:#fff;}
+  .opt.is-correct .opt-mark{display:block;stroke:var(--know);}
+  .opt.is-wrong{border-color:var(--dont);background:var(--dont-wash);}
+  .opt.is-wrong .opt-key{background:var(--dont);color:#fff;}
+  .opt.is-wrong .opt-mark{display:block;stroke:var(--dont);}
+  .opt:disabled{cursor:default;opacity:1;}
+  .opt.is-dim{opacity:.5;}
+
+  .quiz-feedback{margin-top:16px;display:none;}
+  .quiz-feedback.show{display:block;animation:fbin .25s ease;}
+  @keyframes fbin{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .fb-card{border-radius:15px;padding:14px 15px;font-size:.92rem;line-height:1.5;}
+  .fb-card.ok{background:var(--know-wash);border:1px solid #BFE3CF;}
+  .fb-card.no{background:var(--dont-wash);border:1px solid #EFC9C9;}
+  .fb-head{font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:6px;}
+  .fb-card.ok .fb-head{color:var(--know);}
+  .fb-card.no .fb-head{color:var(--dont);}
+  .fb-head svg{width:18px;height:18px;}
+  .fb-line{color:var(--ink);margin:3px 0;}
+  .fb-line b{color:var(--ink);}
+  .fb-correct{color:var(--primary-deep);font-weight:600;}
+
+  #quizControls .quiz-next{
+    width:100%;background:var(--primary);color:#fff;border-radius:var(--radius);
+    padding:16px;font-weight:600;font-size:1.02rem;box-shadow:var(--shadow);
+    transition:transform .12s ease,background .15s ease;
+  }
+  #quizControls .quiz-next:hover{background:var(--primary-deep);}
+  #quizControls .quiz-next:active{transform:scale(.985);}
+
+  .quizdone .qd-review{
+    width:100%;max-width:340px;margin:4px 0 18px;display:flex;flex-direction:column;gap:8px;
+    text-align:left;max-height:230px;overflow-y:auto;
+  }
+  .qd-item{
+    background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--dont);
+    border-radius:11px;padding:10px 12px;font-size:.84rem;
+  }
+  .qd-item .qd-q{font-weight:600;color:var(--ink);margin-bottom:3px;}
+  .qd-item .qd-a{color:var(--primary-deep);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HOME ============ -->
+  <main class="home" id="home">
+    <div class="home-head">
+      <div class="eyebrow">Examen de titulación</div>
+      <h1 id="homeTitle">Tus tarjetas de estudio</h1>
+      <p class="sub" id="homeSub">Una pregunta a la vez. Las que falles vuelven más seguido, las que domines se espacian. Hecho para sesiones cortas.</p>
+    </div>
+
+    <div class="deck-switch" id="deckSwitch" role="tablist" aria-label="Elegir sección">
+      <button class="deck-pill" data-deck="epac" role="tab">Guía EPAC<small>completa</small></button>
+      <button class="deck-pill" data-deck="tem" role="tab">Temario resuelto<small>4 temas</small></button>
+    </div>
+
+    <div class="progress-card">
+      <div class="pc-top">
+        <span class="pc-label">Tu avance</span>
+        <span class="pc-num"><b id="masterCount">0</b> / <span id="totalCount">0</span> dominadas</span>
+      </div>
+      <div class="bar" aria-hidden="true">
+        <span class="seg-master" id="segMaster" style="width:0%"></span>
+        <span class="seg-prog" id="segProg" style="width:0%"></span>
+      </div>
+      <div class="legend">
+        <div><span class="dot" style="background:var(--primary)"></span>Dominadas <b id="lgMaster" style="margin-left:2px">0</b></div>
+        <div><span class="dot" style="background:#9FD0CB"></span>En progreso <b id="lgProg" style="margin-left:2px">0</b></div>
+        <div><span class="dot" style="background:var(--line)"></span>Por ver <b id="lgNew" style="margin-left:2px">0</b></div>
+      </div>
+    </div>
+
+    <button class="cta" id="startMain">
+      <span id="startMainText">Empezar sesión</span>
+      <small id="startMainSub">10 tarjetas mezcladas</small>
+    </button>
+    <div class="cta-row">
+      <button id="startHard">Repasar difíciles<small id="hardSub">las que más fallas</small></button>
+      <button id="startLong">Sesión larga<small>20 tarjetas</small></button>
+    </div>
+
+    <button class="cta cta-quiz" id="startQuiz">
+      <span>Modo examen · opción múltiple</span>
+      <small id="quizSub">10 preguntas · te marco las malas y te explico</small>
+    </button>
+    <div class="cta-row">
+      <button id="quizFailed">Repasar las que fallé<small id="quizFailedSub">aún no hay</small></button>
+      <button id="quizLong">Examen largo<small>20 preguntas</small></button>
+    </div>
+    <button class="timer-toggle" id="timerToggle" role="switch" aria-checked="true">
+      <span class="tt-knob"></span>
+      <span class="tt-label">⏱ Contrarreloj · 1 min por pregunta</span>
+    </button>
+
+    <div class="section-label">Estudiar por tema</div>
+    <div class="cats" id="catList"></div>
+
+    <button class="games-cta" id="openGames">
+      <span class="gc-emoji">🎮</span>
+      <span class="gc-text">Juegos · Premios<small id="gamesCtaSub">desbloquea jugando bien los exámenes</small></span>
+      <span class="stars-chip" id="homeStars">★ 0</span>
+    </button>
+
+    <button class="reset" id="resetBtn">Reiniciar todo mi avance</button>
+  </main>
+
+  <!-- ============ STUDY ============ -->
+  <section class="study" id="study">
+    <div class="topbar">
+      <button class="iconbtn" id="backBtn" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="sessbar">
+        <div class="bar" aria-hidden="true"><span class="seg-master" id="sessFill" style="width:0%"></span></div>
+      </div>
+      <span class="sesscount" id="sessCount" aria-live="polite">0/0</span>
+    </div>
+
+    <div class="cardstage">
+      <div class="flashcard" id="card" role="button" tabindex="0" aria-label="Tarjeta. Presiona para ver la respuesta.">
+        <div class="face front">
+          <span class="chip" id="frontChip">Tema</span>
+          <div class="face-label">Pregunta</div>
+          <div class="q-text" id="qText"></div>
+          <div class="flip-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/></svg>
+            Toca para ver la respuesta
+          </div>
+        </div>
+        <div class="face back">
+          <span class="chip" id="backChip">Tema</span>
+          <div class="face-label">Respuesta</div>
+          <div class="a-text" id="aText"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls" id="controls">
+      <button class="flip-cta" id="flipBtn">Ver respuesta</button>
+    </div>
+  </section>
+
+  <!-- ============ DONE ============ -->
+  <section class="done" id="done">
+    <div class="done-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2 id="doneTitle">¡Sesión completa!</h2>
+    <p id="doneMsg">Cerraste tu ciclo. Eso es justo lo que hace que se te queden.</p>
+    <div class="done-stats">
+      <div><b id="dKnow" style="color:var(--know)">0</b><span>Las sé</span></div>
+      <div><b id="dMid" style="color:var(--mid)">0</b><span>Más o menos</span></div>
+      <div><b id="dDont" style="color:var(--dont)">0</b><span>Repasar</span></div>
+    </div>
+    <div class="done-actions">
+      <button class="cta" id="againBtn" style="padding:15px"><span>Otra sesión</span><small>seguir con el impulso</small></button>
+      <button class="ghost" id="doneHome">Volver al inicio</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ (MODO EXAMEN) ============ -->
+  <section class="quiz" id="quiz">
+    <div class="topbar">
+      <button class="iconbtn" id="quizBack" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="sessbar">
+        <div class="bar" aria-hidden="true"><span class="seg-master" id="quizFill" style="width:0%"></span></div>
+      </div>
+      <span class="sesscount" id="quizCount" aria-live="polite">0/0</span>
+      <span class="quiz-timer" id="quizTimer" aria-live="off">1:00</span>
+    </div>
+
+    <div class="quiz-body">
+      <span class="chip" id="quizChip">Tema</span>
+      <div class="face-label">Pregunta <span id="quizScore" class="quiz-score"></span></div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-feedback" id="quizFeedback" aria-live="polite"></div>
+    </div>
+
+    <div class="controls" id="quizControls"></div>
+  </section>
+
+  <!-- ============ RESULTADOS DEL EXAMEN ============ -->
+  <section class="done quizdone" id="quizdone">
+    <div class="done-mark" id="qdMark">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2 id="qdTitle">Resultado del examen</h2>
+    <p id="qdMsg"></p>
+    <div class="done-stats">
+      <div><b id="qdRight" style="color:var(--know)">0</b><span>Correctas</span></div>
+      <div><b id="qdWrong" style="color:var(--dont)">0</b><span>Falladas</span></div>
+      <div><b id="qdPct" style="color:var(--primary-deep)">0%</b><span>Acierto</span></div>
+    </div>
+    <div class="qd-stars" id="qdStars"></div>
+    <div class="qd-review" id="qdReview"></div>
+    <div class="done-actions">
+      <button class="cta" id="qdAgain" style="padding:15px"><span>Otro examen</span><small>seguir practicando</small></button>
+      <button class="cta cta-quiz" id="qdRetry" style="padding:15px;display:none"><span>Repasar solo las que fallé</span><small id="qdRetrySub"></small></button>
+      <button class="ghost" id="qdHome">Volver al inicio</button>
+    </div>
+  </section>
+
+  <!-- ============ JUEGOS (PREMIOS) ============ -->
+  <section class="games" id="games">
+    <div class="topbar">
+      <button class="iconbtn" id="gamesBack" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-head"><b>Juegos · Premios</b></div>
+      <span class="stars-chip" id="gamesStars">★ 0</span>
+    </div>
+    <p class="games-intro" id="gamesIntro">Gana estrellas ★ contestando bien los exámenes y desbloquea minijuegos para despejar la mente.</p>
+    <div class="games-list" id="gamesList"></div>
+  </section>
+
+  <!-- ============ JUEGO EN CURSO ============ -->
+  <section class="gameview" id="gameview">
+    <div class="topbar">
+      <button class="iconbtn" id="gameBack" aria-label="Volver a juegos">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-head"><b id="gameTitle">Juego</b></div>
+      <span class="stars-chip" id="gameScore">0</span>
+    </div>
+    <div class="game-stage" id="gameStage"></div>
+    <div class="game-foot" id="gameFoot"></div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   DATOS — extraídos de la Guía EPAC
+   c = categoría · q = pregunta · a = respuesta
+   ============================================================ */
+const CATS = {
+  sm:        {name:"Salud mental",            color:"#7C6FB0"},
+  farma:     {name:"Farmacología",            color:"#0E8A82"},
+  endo:      {name:"Endocrino y metabólico",  color:"#C2882B"},
+  inmuno:    {name:"Inmunología y alergia",   color:"#C25B7A"},
+  anat:      {name:"Anatomía y fisiología",   color:"#3D7EA6"},
+  signos:    {name:"Signos vitales y valores",color:"#4F9D69"},
+  hema:      {name:"Hematología",             color:"#B14A4A"},
+  obst:      {name:"Obstetricia",             color:"#C064A0"},
+  pedia:     {name:"Pediatría",               color:"#D98452"},
+  cardioresp:{name:"Cardiorrespiratorio",     color:"#C0563E"},
+  gastro:    {name:"Gastro y abdomen agudo",  color:"#A8702E"},
+  neuro:     {name:"Neuro y urgencias",       color:"#6A5AA8"},
+  teoria:    {name:"Teorías y disciplina",    color:"#5B6CB0"},
+  invest:    {name:"Investigación",           color:"#8A5BA6"},
+  admin:     {name:"Administración y gestión",color:"#7A8A3F"},
+  etica:     {name:"Ética y derecho",         color:"#5A6470"},
+  salud:     {name:"Salud pública y sistema", color:"#2E9D8A"},
+  cuidados:  {name:"Cuidados y procedimientos",color:"#4A7C8C"},
+  // --- Temario resuelto (segunda guía) ---
+  leg:       {name:"Legislación",              color:"#4C6EA8"},
+  ger:       {name:"Gerencia",                 color:"#B07A2E"},
+  inv2:      {name:"Investigación (cuali/cuanti)", color:"#7E57A6"},
+  teo2:      {name:"Teorías de enfermería",    color:"#2E8F86"},
+};
+
+const CARDS = [
+  // ---- Salud mental ----
+  {c:"sm", q:"¿Cuál es el objetivo de la NOM-025-SSA2-2014?", a:"Establecer criterios de operación y organización de los establecimientos de atención integral hospitalaria médico-psiquiátrica, brindada de forma continua, con calidad y calidez y pleno respeto a los derechos humanos de las personas usuarias."},
+  {c:"sm", q:"Enfermedad mental con episodios maníacos y depresivos (antes llamada 'maníaco-depresiva')", a:"Trastorno bipolar.\n• Tipo I: al menos un episodio de manía completa.\n• Tipo II: hipomanía + al menos un episodio de depresión mayor.\n• Ciclotimia: fluctuaciones leves de ánimo durante ≥2 años."},
+  {c:"sm", q:"Enfermedad mental que genera miedo, terror y sensación de eventos catastróficos", a:"Trastorno de pánico: ataques de pánico recurrentes e inesperados, con miedo intenso a perder el control, 'volverse loco' o morir."},
+  {c:"sm", q:"¿Cuál es el objetivo del programa/plan de salud mental?", a:"Promover, proteger y restaurar la salud mental de la población: prevenir trastornos, garantizar atención y tratamiento, reducir el estigma y proteger los derechos de las personas usuarias."},
+
+  // ---- Farmacología ----
+  {c:"farma", q:"Definición de fármaco", a:"Toda sustancia química que, al administrarse a un organismo vivo, modifica una o más funciones fisiológicas (para prevenir, diagnosticar, aliviar, tratar o curar). Es el principio activo; aún no tiene forma farmacéutica (OMS)."},
+  {c:"farma", q:"Fármaco antipirético que se diluye en 50 ml de solución fisiológica", a:"Metamizol."},
+  {c:"farma", q:"Efectos adversos de la difenhidramina", a:"Antihistamínico con efecto anticolinérgico:\n• Somnolencia/sedación (muy frecuente)\n• Sequedad de boca y visión borrosa\n• Mareo/confusión (sobre todo en adultos mayores)\n• Retención urinaria, estreñimiento, taquicardia\n• Reacciones paradójicas en niños (excitación, insomnio)."},
+  {c:"farma", q:"Efectos adversos de los diuréticos de asa (ej. furosemida)", a:"• Hipokalemia, hiponatremia, hipocalcemia, hipomagnesemia\n• Deshidratación e hipotensión\n• Ototoxicidad (sobre todo en dosis altas IV)\n• Hiperglucemia y aumento del ácido úrico (riesgo de gota)."},
+  {c:"farma", q:"¿Para qué sirve la cloroquina?", a:"1) Antipalúdico: malaria por P. falciparum sensible.\n2) Enfermedades autoinmunes: lupus eritematoso sistémico y artritis reumatoide, por su efecto inmunomodulador."},
+  {c:"farma", q:"¿La aspirina es un anticoagulante?", a:"No. Es un ANTIAGREGANTE PLAQUETARIO.\nInhibe de forma irreversible la COX-1 → ↓ tromboxano A2, así las plaquetas no se agrupan. Efecto antiagregante a dosis baja: 75–100 mg/día."},
+  {c:"farma", q:"Hidróxido de aluminio + hidróxido de magnesio: ¿qué tipo de fármaco es?", a:"Un antiácido. Neutraliza el ácido gástrico. Se combinan porque el aluminio tiende a estreñir y el magnesio a aflojar, equilibrando el efecto intestinal."},
+
+  // ---- Endocrino y metabólico ----
+  {c:"endo", q:"Enfermedad caracterizada por poliuria, polidipsia y bajo peso", a:"Diabetes mellitus."},
+  {c:"endo", q:"Valor de glucosa en ayuno para diagnosticar diabetes", a:"≥126 mg/dL (7.0 mmol/L) con ayuno de al menos 8 h, en dos ocasiones o acompañado de otros criterios (ADA / OMS)."},
+  {c:"endo", q:"Hormona que produce los cambios sexuales en la mujer", a:"El estrógeno: desarrolla los caracteres sexuales secundarios (mamas, caderas, vello), regula el ciclo menstrual y prepara el cuerpo para el embarazo."},
+  {c:"endo", q:"¿Qué producen las células de Leydig?", a:"Testosterona (en el tejido intersticial del testículo). Su producción la estimula la hormona luteinizante (LH) de la hipófisis."},
+  {c:"endo", q:"Hormonas de la neurohipófisis", a:"• ADH (vasopresina): regula la reabsorción de agua en el riñón.\n• Oxitocina: contracciones uterinas y eyección de leche.\n(La neurohipófisis las almacena y libera; se producen en el hipotálamo.)"},
+
+  // ---- Inmunología y alergia ----
+  {c:"inmuno", q:"Síntomas del shock anafiláctico", a:"Reacción de hipersensibilidad tipo I (mediada por IgE):\n• Piel: urticaria, prurito, angioedema\n• Respiratorio: disnea, sibilancias, edema laríngeo\n• Cardiovascular: hipotensión, taquicardia, shock\n• Digestivo: náusea, vómito, diarrea\n• Neurológico: ansiedad, confusión, pérdida de conciencia."},
+  {c:"inmuno", q:"¿Qué es la inmunoglobulina IgE?", a:"Anticuerpo responsable de las reacciones alérgicas (hipersensibilidad tipo I) y de la defensa contra parásitos. Se une a mastocitos y basófilos; al contactar el alérgeno libera histamina y otros mediadores."},
+
+  // ---- Anatomía y fisiología ----
+  {c:"anat", q:"Parte sensitiva del ojo", a:"La retina (capta la luz y la transforma en impulsos nerviosos)."},
+  {c:"anat", q:"Capa germinal que forma el sistema nervioso central", a:"El ectodermo → origina el tubo neural → cerebro y médula espinal.\n(Mesodermo: músculos, huesos, circulatorio. Endodermo: digestivo y respiratorio.)"},
+  {c:"anat", q:"Parte del riñón donde se filtra la sangre", a:"El glomérulo, dentro del corpúsculo renal (de Malpighi), junto con la cápsula de Bowman. Ahí ocurre la filtración glomerular."},
+  {c:"anat", q:"Capa de la piel que contiene glándulas sudoríparas y sebáceas", a:"La dermis (capa intermedia). También aloja folículos pilosos, vasos sanguíneos y terminaciones nerviosas."},
+  {c:"anat", q:"Músculo de la boca encargado de silbar", a:"Orbicular de los labios (con apoyo del buccinador)."},
+  {c:"anat", q:"Nervio frénico: función y origen", a:"Nervio mixto que inerva principalmente el diafragma (músculo de la respiración).\nSe origina en C3-C4-C5. Regla: 'C3, 4 y 5 mantienen vivo el diafragma'. Su lesión causa parálisis diafragmática."},
+  {c:"anat", q:"Cadera / fosa ilíaca mayor: ¿dónde inicia y cuáles son sus límites?", a:"Parte superior e interna del ilion.\nLímites:\n• Superior: cresta ilíaca\n• Inferior: línea arqueada (la separa de la pelvis menor)\n• Pared anterolateral: cara interna del ilion."},
+  {c:"anat", q:"Cadera / pelvis menor (cavidad pélvica verdadera): ¿dónde inicia y sus límites?", a:"Inicia justo por debajo de la línea arqueada.\nLímites:\n• Superior: línea arqueada\n• Anterior: sínfisis del pubis\n• Posterior: sacro y cóccix\n• Lateral: isquiones.\nContiene los órganos pélvicos."},
+  {c:"anat", q:"Circulación mayor (sistémica): ¿dónde inicia y dónde termina?", a:"Inicia en el ventrículo izquierdo (sale por la aorta) y termina en la aurícula derecha (llega por las venas cavas)."},
+  {c:"anat", q:"Circulación menor (pulmonar): ¿dónde inicia y dónde termina?", a:"Inicia en el ventrículo derecho (sale por la arteria pulmonar) y termina en la aurícula izquierda (llega por las venas pulmonares)."},
+
+  // ---- Signos vitales y valores ----
+  {c:"signos", q:"Valores normales de temperatura en el adulto", a:"• Oral: 36.0 – 37.4 °C\n• Axilar: 35.5 – 37.0 °C"},
+  {c:"signos", q:"¿A partir de qué temperatura se considera fiebre?", a:"• Fiebre (hipertermia): >38.0 °C\n• Febrícula: 37.5 – 37.9 °C\n• Hipotermia: <35.0 °C"},
+  {c:"signos", q:"Clasificación del IMC (kg/m²)", a:"• Bajo peso: <18.5\n• Normal: 18.5 – 24.9\n• Sobrepeso: ≥25 (preobesidad 25–29.9)\n• Obesidad: ≥30 (I: 30–34.9 · II: 35–39.9 · III/mórbida: ≥40)."},
+
+  // ---- Hematología ----
+  {c:"hema", q:"Anemia caracterizada por deficiencia de hierro", a:"Anemia ferropénica (la más común): baja el hierro → menos hemoglobina.\nSíntomas: fatiga, palidez, disnea, mareo, uñas quebradizas, caída del cabello y pica (deseo de comer tierra o hielo)."},
+
+  // ---- Obstetricia ----
+  {c:"obst", q:"Embarazo de 42 semanas con líquido amniótico verde: ¿qué órgano lo provoca y qué procedimiento harías?", a:"Órgano: el intestino del feto (expulsa meconio, normalmente por estrés fetal).\nProcedimiento: monitorización fetal continua y valorar dinámica/dilatación. Si hay meconio espeso o sufrimiento fetal → parto inmediato (cesárea si no hay condiciones para vaginal). Al nacer: reanimación neonatal con aspiración de vías aéreas."},
+  {c:"obst", q:"Posiciones que favorecen el trabajo de parto", a:"De pie, deambulación, sedente (con balón terapéutico), cuclillas, cuadrupedia/genupectoral, decúbito lateral izquierdo, sentada inclinada hacia adelante y rodillas al pecho. Aprovechan la gravedad y amplían el diámetro pélvico."},
+  {c:"obst", q:"Signos de alarma en el tercer trimestre del embarazo", a:"• Sangrado vaginal\n• Disminución o ausencia de movimientos fetales\n• Dolor abdominal intenso\n• Pérdida de líquido por la vagina\n• Cefalea intensa, visión borrosa o destellos\n• Hinchazón súbita de cara y manos\n• Fiebre >38 °C\n• Contracciones regulares antes de la semana 37\n• Ardor al orinar · dificultad respiratoria."},
+  {c:"obst", q:"Causas de muerte obstétrica (2013, México)", a:"Directas: trastornos hipertensivos (preeclampsia/eclampsia), hemorragias obstétricas, aborto complicado.\nIndirectas: enfermedades respiratorias (influenza H1N1) y crónicas (diabetes, cardiovasculares). (Datos INEGI.)"},
+
+  // ---- Pediatría ----
+  {c:"pedia", q:"Características de la atresia esofágica", a:"Malformación congénita: el esófago termina en un saco ciego y no conecta con el estómago (a menudo con fístula traqueoesofágica).\nSignos: salivación excesiva, tos/ahogo/cianosis al alimentarse.\nDx: la sonda no logra pasar al estómago. Tx: cirugía."},
+  {c:"pedia", q:"Escalas para determinar displasia de cadera", a:"• Ortolani y Barlow: maniobras clínicas en el recién nacido.\n• Graf: por ecografía (Tipo I normal → Tipo IV luxación completa).\n• Índice acetabular: por radiografía en niños mayores."},
+  {c:"pedia", q:"¿Qué se mide en la somatometría pediátrica?", a:"Peso, talla/longitud, perímetro cefálico (hasta ~3 años), perímetro torácico/abdominal e IMC (desde los 2 años). Se interpreta con curvas de crecimiento OMS/CDC."},
+  {c:"pedia", q:"Enfermedad exantemática con manchas de Koplik y exantema cefalocaudal retroauricular", a:"Sarampión (virus de la familia Paramyxoviridae, género Morbillivirus). Las manchas de Koplik son su signo patognomónico; el exantema avanza de la cabeza hacia los pies (cefalocaudal)."},
+
+  // ---- Cardiorrespiratorio ----
+  {c:"cardioresp", q:"Factores de riesgo del síndrome coronario", a:"Hipertensión, tabaquismo, colesterol alto (dislipidemia) y diabetes; también obesidad, sedentarismo, edad y antecedentes familiares. (Causa de fondo: aterosclerosis coronaria.)"},
+  {c:"cardioresp", q:"Ruido respiratorio musical y agudo", a:"Sibilancia: ruido silbante y agudo, sobre todo en la espiración, por estrechamiento de bronquios/bronquiolos (asma, EPOC, bronquitis, alergia)."},
+  {c:"cardioresp", q:"¿Qué es la ortopnea?", a:"Dificultad para respirar (disnea) al estar acostado, que mejora al sentarse o ponerse de pie. Causa típica: insuficiencia cardíaca izquierda (al acostarse, el líquido congestiona los pulmones)."},
+  {c:"cardioresp", q:"¿Para qué sirve el drenaje postural?", a:"Técnica de fisioterapia respiratoria que usa la gravedad y posiciones específicas para movilizar y eliminar secreciones bronquiales hacia las vías mayores, donde se expulsan. Se combina con percusión y vibración torácica."},
+  {c:"cardioresp", q:"¿Qué dispositivo de oxigenoterapia usas en un paciente con neumonía?", a:"Depende del tipo y la gravedad de la neumonía y de la SatO2: desde puntas nasales (caso leve) hasta mascarilla simple, mascarilla con reservorio o apoyo ventilatorio según el grado de hipoxemia."},
+
+  // ---- Gastro y abdomen agudo ----
+  {c:"gastro", q:"Síntomas de la gastritis", a:"Inflamación de la mucosa gástrica.\nSíntomas: dolor/ardor en la 'boca del estómago', náusea, vómito, eructos, llenura precoz, pérdida de apetito; en casos graves, vómito con sangre o heces negras.\nCausa #1 a nivel mundial: Helicobacter pylori."},
+  {c:"gastro", q:"Síntomas de la colitis", a:"Inflamación del colon.\nSíntomas: dolor/cólicos en abdomen bajo, diarrea (a veces con moco o sangre), urgencia, tenesmo, distensión, fiebre.\nDiarrea con sangre = atención urgente."},
+  {c:"gastro", q:"Síntomas de la pancreatitis", a:"Inflamación del páncreas.\nSíntomas: dolor intenso en epigastrio que irradia a la espalda y empeora al comer, náusea/vómito, distensión, fiebre, taquicardia; ictericia si hay obstrucción biliar.\nCausa #1 aguda: cálculos biliares."},
+  {c:"gastro", q:"Síntomas de la peritonitis", a:"Inflamación del peritoneo (urgencia médica).\nSíntomas: dolor abdominal intenso y generalizado, 'abdomen en tabla' (rigidez), distensión, fiebre, náusea/vómito, taquicardia e hipotensión."},
+  {c:"gastro", q:"Síntomas de la sepsis", a:"Respuesta inflamatoria sistémica grave ante una infección, con riesgo de falla orgánica.\nTempranos: fiebre >38.5 °C o hipotermia <36 °C, FC >90, FR >22, escalofríos, confusión.\nAvanzados: hipotensión, oliguria, piel fría y moteada (shock séptico)."},
+
+  // ---- Neuro y urgencias ----
+  {c:"neuro", q:"Hernias encefálicas: tipos y signos de alarma", a:"Desplazamiento de tejido cerebral por ↑ presión intracraneal (urgencia).\nTipos: subfalcina (cingulada), transtentorial uncal, central, transalar y tonsilar (amigdalina → comprime el bulbo y causa paro cardiorrespiratorio).\nAlarma: pupilas asimétricas/fijas, cambio del patrón respiratorio, deterioro rápido de la conciencia, posturas de decorticación/descerebración."},
+  {c:"neuro", q:"¿A cuántos cmH₂O se mantiene el globo (cuff) de la cánula de traqueotomía?", a:"Entre 20 y 30 cmH₂O. No se mide en 'centímetros de longitud': se elige el tamaño correcto de cánula y se mantiene la presión del balón en ese rango para sellar sin dañar la tráquea."},
+  {c:"neuro", q:"Cuidados al administrar una solución con potasio y sulfato de magnesio (deshidratación severa)", a:"• Revisar K, Mg y función renal antes (urea/creatinina).\n• Potasio IV SIEMPRE diluido, nunca en bolo (máx ~10 mEq/h en vía periférica).\n• Magnesio lento (riesgo de hipotensión, bradicardia, depresión respiratoria).\n• Monitoreo de signos vitales y ECG continuo (arritmias).\n• Balance hídrico estricto y vigilar toxicidad (antídoto del Mg: gluconato de calcio IV)."},
+
+  // ---- Teorías y disciplina ----
+  {c:"teoria", q:"Teoría de Jean Watson", a:"Teoría del cuidado humano: el cuidado transpersonal y la relación enfermera-paciente son la esencia de la enfermería."},
+  {c:"teoria", q:"Teoría de Madeleine Leininger", a:"Teoría de la diversidad y universalidad de los cuidados culturales (enfermería transcultural): el cuidado debe ajustarse a la cultura y creencias de la persona."},
+  {c:"teoria", q:"Pirámide de Maslow: características de las necesidades fisiológicas y de seguridad", a:"• Fisiológicas (base): supervivencia → respirar, comer, beber, dormir, eliminación, temperatura. Son las más prioritarias.\n• Seguridad: protección, estabilidad, salud, empleo y vivienda; sentirse libre de peligro. Se buscan una vez cubiertas las fisiológicas."},
+  {c:"teoria", q:"Teoría de la incertidumbre frente a la enfermedad: ¿quién es la autora?", a:"Merle Mishel."},
+  {c:"teoria", q:"Teoría del confort: ¿quién es la autora?", a:"Katharine Kolcaba (años 90).\nTipos de confort: alivio, facilitación (tranquilidad) y trascendencia.\nÁmbitos: físico, psicoespiritual, sociocultural y ambiental."},
+  {c:"teoria", q:"¿Qué conforma el metaparadigma de enfermería?", a:"Cuatro conceptos fundamentales: Persona, Entorno, Salud y Enfermería."},
+  {c:"teoria", q:"¿Qué es una teoría (concepto general)?", a:"Sistema organizado de conceptos y proposiciones que describe, explica y predice un fenómeno, basado en observación y evidencia. Es explicativa, predictiva, coherente y revisable (no es una simple suposición)."},
+  {c:"teoria", q:"¿Qué es una teoría en enfermería?", a:"Conjunto organizado de conceptos, definiciones y proposiciones que describe, explica y predice fenómenos del cuidado. Guía la práctica, la docencia, la investigación y la gestión.\nEjemplos: Nightingale (entorno), Henderson (necesidades), Orem (autocuidado), Roy (adaptación), Watson (cuidado humano)."},
+  {c:"teoria", q:"Corrientes filosóficas aplicadas en enfermería", a:"Humanismo, fenomenología, existencialismo, holismo, positivismo, ética y teoría del cuidado. Cada una orienta cómo se entiende y se brinda el cuidado."},
+  {c:"teoria", q:"Bases de la disciplina de enfermería (histórica, filosófica y ética)", a:"• Histórica: evolución del cuidado empírico hacia la profesionalización (Nightingale).\n• Filosófica: visión del ser humano, la salud y el cuidado (metaparadigma).\n• Ética: valores y principios que guían la práctica (autonomía, beneficencia, no maleficencia, justicia)."},
+  {c:"teoria", q:"Etapas del proceso de enfermería y en qué consiste cada una", a:"1. Valoración: recolectar y organizar datos del paciente.\n2. Diagnóstico: identificar problemas o respuestas humanas.\n3. Planeación: fijar objetivos y planear intervenciones.\n4. Ejecución: realizar las intervenciones planeadas.\n5. Evaluación: verificar si se lograron los resultados."},
+  {c:"teoria", q:"Tipos de conocimiento", a:"Empírico (experiencia), científico (método científico), filosófico (reflexivo/crítico), teológico (creencias/fe), intuitivo (sin razonamiento consciente) y técnico (aplicación práctica)."},
+
+  // ---- Investigación ----
+  {c:"invest", q:"¿Qué son los operadores booleanos?", a:"Palabras o símbolos que conectan términos y establecen relaciones lógicas en una búsqueda: AND (ambos), OR (cualquiera), NOT (excluye). Se usan en bases de datos, programación y lógica."},
+  {c:"invest", q:"Diferencia entre etnografía y fenomenología", a:"• Etnografía: estudia a fondo una cultura o grupo 'desde dentro' (observación participante, diarios de campo).\n• Fenomenología: estudia la experiencia subjetiva vivida por la persona (cómo percibe y da significado a algo, p. ej. su enfermedad)."},
+  {c:"invest", q:"¿Cómo se selecciona la muestra en investigación cualitativa?", a:"De forma intencional, NO aleatoria (busca comprender a fondo, no representar estadísticamente).\nTipos: intencional/propositivo, por conveniencia, bola de nieve, teórico, máxima variación, casos típicos/extremos.\nTamaño: se define por saturación (cuando ya no surgen datos nuevos)."},
+  {c:"invest", q:"¿En qué consiste el método empírico de investigación?", a:"Enfoque basado en la observación directa, la experiencia y la evidencia del mundo real.\nEtapas: observación → preguntas/hipótesis → recolección de datos → análisis → conclusiones."},
+  {c:"invest", q:"¿Qué son las fuentes de información primarias?", a:"Documentos o datos originales y directos, sin interpretación previa de otros autores.\nEjemplos: artículos científicos originales, leyes y sentencias, censos, registros clínicos, manuscritos/diarios, tesis."},
+  {c:"invest", q:"Etapas de la investigación cuantitativa y cualitativa", a:"Cuantitativa: idea/problema → marco teórico → hipótesis y variables → diseño → recolección → análisis estadístico → resultados y conclusiones.\nCualitativa: idea → planteamiento → inmersión en el campo → recolección (entrevistas/observación) → análisis e interpretación → significados/teoría (más flexible y circular)."},
+
+  // ---- Administración y gestión ----
+  {c:"admin", q:"Concepto de administración", a:"Proceso de planear, organizar, dirigir y controlar los recursos (humanos, financieros, materiales y tecnológicos) para alcanzar objetivos de forma eficaz y eficiente."},
+  {c:"admin", q:"Características de un gerente (en enfermería)", a:"Liderazgo, comunicación efectiva, toma de decisiones, organización, visión estratégica, adaptabilidad, resolución de problemas, delegación, responsabilidad ética y capacidad de motivar."},
+  {c:"admin", q:"Fórmula y constantes del cálculo de personal", a:"Fórmula: (pacientes × horas de cuidado requeridas) ÷ horas disponibles por trabajador.\nConstantes: atención básica 1.4–1.8; UCI hasta 2.5 trabajadores por cama.\nEj.: (30 pac × 6 h) ÷ 8 h = 22.5 → 23 trabajadores."},
+  {c:"admin", q:"Fórmula y constantes del cálculo de sábanas", a:"Fórmula: n.º de camas × constante de cambio por día.\nConstantes: medicina general = 2; cirugía/UCI/pediatría = 3–4.\nEj.: 40 camas × 3 = 120 juegos de sábanas/día."},
+  {c:"admin", q:"¿Qué es el FODA?", a:"Herramienta de análisis estratégico (interno/externo):\n• Fortalezas — interno (+)\n• Oportunidades — externo (+)\n• Debilidades — interno (−)\n• Amenazas — externo (−)."},
+  {c:"admin", q:"¿En qué documento registra enfermería los signos vitales? (opciones: diagrama de flujo, diagrama de Pareto…)", a:"En la hoja de registros clínicos de enfermería / gráfica de signos vitales (la 'hoja de enfermería').\nNO es el diagrama de flujo ni el de Pareto: esos son herramientas de calidad y análisis de procesos."},
+
+  // ---- Ética y derecho ----
+  {c:"etica", q:"Concepto de ética", a:"Rama de la filosofía que estudia de forma racional la moral: distingue lo correcto/incorrecto, justo/injusto. Es normativa, reflexiva, universal y práctica."},
+  {c:"etica", q:"Concepto de robo (y diferencia con el hurto)", a:"Robo: apoderarse de un bien ajeno, con ánimo de lucro, usando violencia, amenaza o fuerza, sin consentimiento del dueño.\nDiferencia: el HURTO no emplea violencia ni fuerza (ej. tomar un celular olvidado)."},
+  {c:"etica", q:"Concepto de riesgo", a:"Probabilidad de que una amenaza se materialice y cause un daño o impacto negativo.\nElementos: probabilidad, consecuencia/impacto y exposición."},
+  {c:"etica", q:"Grupos vulnerables a sufrir violencia", a:"Mujeres; niñas, niños y adolescentes; personas mayores; personas con discapacidad; población LGBTIQ+; indígenas y minorías étnicas; personas en pobreza o situación de calle; migrantes/refugiados; personas privadas de la libertad."},
+  {c:"etica", q:"¿En qué consiste la parte dogmática de la Constitución?", a:"Sección que establece los derechos fundamentales y garantías individuales, y los principios sobre los que se basa el orden jurídico. En México corresponde a los artículos 1 al 29."},
+  {c:"etica", q:"Garantías individuales en la Constitución", a:"Mecanismos jurídicos que protegen los derechos fundamentales frente a abusos de autoridad: igualdad (art. 1), libertad personal (16), de expresión (6), de culto (24), de petición (8), de tránsito (11), educación (3), seguridad jurídica (14 y 16) y propiedad (27). Se protegen vía juicio de amparo."},
+  {c:"etica", q:"Artículo constitucional que reconoce el derecho a la protección de la salud", a:"Artículo 4º de la Constitución: 'Toda persona tiene derecho a la protección de la salud.' Es la base de instituciones como IMSS e ISSSTE y de la Ley General de Salud."},
+  {c:"etica", q:"Según el Código Penal, ¿qué artículo sustenta la responsabilidad del profesional que causa lesiones en su ejercicio?", a:"Artículo 228 del Código Penal Federal: los profesionistas, artistas o técnicos y sus auxiliares son responsables de los delitos que cometan en el ejercicio de su profesión, arte u oficio."},
+  {c:"etica", q:"Temas legales: abandono de persona y negligencia", a:"• Abandono de persona: dejar sin cuidado a quien no puede valerse por sí mismo y a quien se tiene el deber de cuidar (delito).\n• Negligencia: omitir los cuidados o la diligencia debida y causar un daño. En el ejercicio profesional genera responsabilidad civil, penal y administrativa."},
+
+  // ---- Salud pública y sistema ----
+  {c:"salud", q:"Índice de Desarrollo Humano (PNUD): ¿qué factores mide?", a:"Tres dimensiones:\n• Salud → esperanza de vida al nacer\n• Educación → años de escolaridad (promedio y esperados)\n• Nivel de vida → Ingreso Nacional Bruto per cápita."},
+  {c:"salud", q:"Según el IDH, ¿en qué lugar está posicionado México?", a:"Según el Informe de Desarrollo Humano 2025 (PNUD): posición 81 de 193 países, con puntuación 0.789 (mejoró desde el lugar 86 del informe anterior)."},
+  {c:"salud", q:"Concepto de epidemiología", a:"Ciencia que estudia la distribución, la frecuencia y los determinantes de las enfermedades y eventos de salud en las poblaciones, con el fin de prevenir y controlar problemas de salud."},
+  {c:"salud", q:"¿Cómo está estructurado el sistema de salud en México?", a:"Sistema mixto, en niveles:\n• Público con seguridad social: IMSS, ISSSTE, PEMEX/SEDENA/SEMAR.\n• Público sin seguridad social: IMSS-Bienestar.\n• Privado: clínicas, hospitales y seguros.\nNiveles de atención: 1.º (básica/preventiva), 2.º (especialidades), 3.º (alta especialidad)."},
+  {c:"salud", q:"¿En qué consiste la promoción de la salud?", a:"Proceso que permite a las personas aumentar el control sobre su salud y mejorarla (OMS). No solo previene enfermedades: crea condiciones (educación, entornos y políticas saludables, participación comunitaria) para vivir de forma sana."},
+  {c:"salud", q:"¿Qué es el estilo de vida?", a:"Conjunto de hábitos, conductas y decisiones diarias que afectan la salud física, mental, emocional y social (alimentación, actividad física, descanso, consumo de sustancias, manejo del estrés, higiene)."},
+  {c:"salud", q:"Concepto de red de apoyo y sus tipos", a:"Conjunto de personas, instituciones o recursos que brindan ayuda emocional, social, económica o práctica.\nTipos: informal (familia, amigos, vecinos), formal/institucional (salud, DIF, Cruz Roja, programas) y comunitaria (grupos, asociaciones)."},
+  {c:"salud", q:"Vacuna del tétanos: ¿a qué grupos se aplica?", a:"• Niños: esquema con pentavalente/DPT (2, 4, 6, 18 meses y refuerzo escolar).\n• Embarazadas: Td/Tdap en cada embarazo (desde la semana 20) → previene el tétanos neonatal.\n• Adultos: refuerzo Td cada 10 años.\n• Personas con heridas de riesgo (sucias, punzantes, oxidadas)."},
+  {c:"salud", q:"Características de una dieta saludable", a:"Una dieta saludable debe ser: Completa, Equilibrada, Suficiente, Adecuada, Variada, Inocua y Asequible."},
+  {c:"salud", q:"Concepto de esterilización", a:"Proceso físico o químico que destruye TODA forma de vida microbiana, incluidas las esporas (autoclave, óxido de etileno, radiación gamma/UV, filtración)."},
+  {c:"salud", q:"Concepto de asepsia (y diferencia con antisepsia)", a:"Asepsia: conjunto de técnicas para PREVENIR la contaminación por microorganismos (ausencia de patógenos en un área).\nAntisepsia: uso de sustancias para ELIMINAR microorganismos ya presentes en piel o tejidos vivos (alcohol, yodo, clorhexidina)."},
+
+  // ---- Cuidados y procedimientos ----
+  {c:"cuidados", q:"¿Qué solución administras en un paciente con alcalosis metabólica?", a:"Solución salina isotónica al 0.9%."},
+  {c:"cuidados", q:"Cuidados al alimentar por sonda nasogástrica (SNG)", a:"Antes: verificar posición (aspirar contenido, pH <5) y evaluar residuo gástrico; paciente en semifowler (45°).\nDurante: fórmula a temperatura ambiente, administración lenta (bolo en 15–30 min), vigilar intolerancia.\nDespués: mantener la posición 30–60 min y lavar la sonda con 20–50 ml de agua. Higiene nasal/oral diaria."},
+  {c:"cuidados", q:"Complicaciones inmediatas de la colostomía (0–30 días)", a:"Isquemia/necrosis del estoma (se torna oscuro o negro), retracción, hemorragia, infección/absceso, dehiscencia mucocutánea, obstrucción intestinal y prolapso del estoma."},
+  {c:"cuidados", q:"Complicaciones de la sonda nasogástrica", a:"Inmediatas: mala colocación (paso a la tráquea → broncoaspiración), epistaxis, lesión de la mucosa.\nTardías: úlceras nasales/esofágicas, sinusitis/otitis, reflujo, obstrucción de la sonda.\nGrave: broncoaspiración → neumonía aspirativa."},
+  {c:"cuidados", q:"Procedimiento que drena heces fecales líquidas (paciente crítico o incontinente)", a:"Sistema de manejo/drenaje fecal (FMS): catéter rectal blando con globo que dirige las heces líquidas a una bolsa cerrada (ej. Flexi-Seal®, DigniCare®).\nContraindicado con heces sólidas, impactación o lesiones rectales."},
+  {c:"cuidados", q:"¿Para qué sirve el WHOQOL-BREF en geriatría?", a:"Instrumento de la OMS (26 ítems) que evalúa la calidad de vida en 4 dominios: físico, psicológico, relaciones sociales y entorno/ambiente.\nEn el adulto mayor: detecta necesidades no cubiertas y mide la evolución antes/después de una intervención."},
+
+  /* ================= TEMARIO RESUELTO (segunda guía) ================= */
+  // ---- Legislación ----
+  {c:"leg", d:"tem", q:"¿Qué es la deontología profesional?", a:"Conjunto de principios y reglas éticas que regulan y guían una actividad profesional: los deberes mínimos exigibles. El propio colectivo los define y los recoge por escrito en los códigos deontológicos."},
+  {c:"leg", d:"tem", q:"Derechos generales del paciente", a:"• Atención médica adecuada\n• Trato digno y respetuoso\n• Información clara, oportuna y veraz\n• Decidir libremente sobre su atención\n• Otorgar o no su consentimiento informado\n• Confidencialidad\n• Segunda opinión\n• Atención en urgencias\n• Contar con expediente clínico\n• Inconformarse por la atención recibida."},
+  {c:"leg", d:"tem", q:"¿Qué es el consentimiento informado?", a:"El personal de salud informa al paciente, en calidad y cantidad suficientes, sobre la enfermedad, el procedimiento, sus riesgos, beneficios y alternativas. El documento escrito solo es el resguardo de que se informó y de que el paciente comprendió."},
+  {c:"leg", d:"tem", q:"¿Qué es el secreto profesional?", a:"Obligación moral del profesional de salud de guardar en secreto las confidencias conocidas durante el ejercicio de su profesión."},
+  {c:"leg", d:"tem", q:"¿Qué es el expediente clínico y qué NOM lo regula?", a:"Conjunto único de información y datos personales del paciente (escritos, gráficos, imagenológicos, electrónicos…) donde el personal de salud registra su intervención.\nLo regula la NOM-004-SSA3-2012."},
+  {c:"leg", d:"tem", q:"Tipos de normas", a:"• Norma social: reglas de convivencia en sociedad.\n• Norma penal: conductas tipificadas como delito y penadas por ley.\n• Norma jurídica: reglamenta delitos y conductas de desviación jurídica.\nLey: norma establecida por una autoridad superior para regular las relaciones sociales conforme a la justicia."},
+  {c:"leg", d:"tem", q:"¿Qué son las garantías individuales?", a:"Derechos que el individuo disfruta desde su nacimiento y puede exigir que se cumplan, para lograr la paz, el orden y el bien común. Se protegen mediante el juicio de amparo."},
+  {c:"leg", d:"tem", q:"Artículos constitucionales clave (3, 4, 5, 123)", a:"• Art. 3º: derecho a la educación (laica y obligatoria).\n• Art. 4º: igualdad varón/mujer; decidir nº de hijos; alimentación; protección de la salud; medio ambiente sano.\n• Art. 5º: libertad de profesión/trabajo lícito; la ley fija qué profesiones requieren título.\n• Art. 123º: derecho al trabajo digno y socialmente útil."},
+  {c:"leg", d:"tem", q:"¿Qué reglamenta la Ley General de Salud?", a:"Reglamenta el derecho a la protección de la salud del artículo 4º constitucional: establece las bases para el acceso a los servicios de salud y la concurrencia de la Federación y las entidades en salubridad general."},
+  {c:"leg", d:"tem", q:"¿Qué es la CONAMED?", a:"Comisión Nacional de Arbitraje Médico: órgano desconcentrado de la Secretaría de Salud (creado en 1996). Resuelve de forma amigable los conflictos entre usuarios y prestadores de servicios médicos mediante orientación, gestión inmediata, conciliación y arbitraje."},
+  {c:"leg", d:"tem", q:"Los 4 principios bioéticos", a:"• Autonomía: respetar las decisiones de la persona.\n• Beneficencia: hacer el bien (ámbito privado).\n• No maleficencia: 'primum non nocere', no dañar (ámbito público, penado por ley).\n• Justicia: equidad en cargas y beneficios; sin discriminación."},
+  {c:"leg", d:"tem", q:"Eutanasia, distanasia y ortotanasia", a:"• Eutanasia: provocar intencionadamente la muerte para evitar sufrimiento (activa/pasiva, voluntaria/involuntaria).\n• Distanasia: encarnizamiento terapéutico; prolongar la vida a toda costa.\n• Ortotanasia: dejar morir a tiempo sin medios extraordinarios ('muerte digna')."},
+  {c:"leg", d:"tem", q:"Reglas legales del manejo del cadáver", a:"Los cadáveres no son objeto de propiedad y se tratan con respeto. Deben inhumarse, incinerarse o embalsamarse dentro de las 48 h; los no reclamados a las 72 h se consideran de persona desconocida. Requiere certificado de defunción."},
+
+  // ---- Gerencia ----
+  {c:"ger", d:"tem", q:"Padres de la administración: Taylor vs Fayol", a:"• Taylor (administración científica): aumenta la eficiencia operativa; va de abajo hacia arriba (de las partes al todo), con división y especialización del trabajo.\n• Fayol (teoría clásica): énfasis en la estructura organizacional; va de arriba hacia abajo (del todo a las partes)."},
+  {c:"ger", d:"tem", q:"Las 4 etapas del proceso administrativo", a:"1. Planeación — ¿qué se va a hacer?\n2. Organización — ¿cómo y quién lo hace?\n3. Dirección — ejecutar (liderazgo, motivación, comunicación).\n4. Control — medir y corregir.\nFase mecánica: planeación + organización. Fase dinámica: dirección + control."},
+  {c:"ger", d:"tem", q:"¿En qué consiste la Planeación?", a:"Definir qué se va a hacer, la dirección a seguir y cómo alcanzarlo: fijar objetivos, estrategias y políticas. Suele apoyarse en el análisis FODA."},
+  {c:"ger", d:"tem", q:"¿En qué consiste el Control?", a:"Evaluar el desempeño: medir los resultados obtenidos, compararlos con los planeados e iniciar acciones correctivas para la mejora continua."},
+  {c:"ger", d:"tem", q:"Misión vs Visión", a:"• Misión: la razón de ser de la organización, enfocada en el presente (lo que hace y por qué).\n• Visión: la imagen a la que aspira a largo plazo (cómo espera ser en el futuro)."},
+  {c:"ger", d:"tem", q:"¿Qué es el análisis FODA?", a:"Herramienta de planificación estratégica:\n• Interno: Fortalezas y Debilidades.\n• Externo: Oportunidades y Amenazas."},
+  {c:"ger", d:"tem", q:"¿Para qué sirve el diagrama de Pareto?", a:"Técnica gráfica que clasifica los aspectos de mayor a menor frecuencia. Muestra el principio de Pareto ('pocos vitales, muchos triviales') y permite priorizar."},
+  {c:"ger", d:"tem", q:"¿Qué es un organigrama?", a:"Representación gráfica de la estructura de una organización, mostrando los cargos jerárquicos. Permite ver de un vistazo cómo está organizada."},
+  {c:"ger", d:"tem", q:"Las 8 Acciones Esenciales para la Seguridad del Paciente (AESP)", a:"1. Identificación correcta (nombre, expediente, fecha de nacimiento)\n2. Comunicación efectiva\n3. Seguridad en la medicación (alto riesgo: electrolitos concentrados, quimio, radiofármacos, insulinas, anticoagulantes)\n4. Seguridad en los procedimientos (marcado de sitio, verificación, time-out)\n5. Reducción de infecciones (higiene de manos)\n6. Reducción del riesgo de caídas\n7. Registro y análisis de eventos centinela\n8. Cultura de seguridad del paciente."},
+  {c:"ger", d:"tem", q:"AESP 3: medicamentos de alto riesgo que exigen doble verificación", a:"Electrolitos concentrados, quimioterapéuticos, radiofármacos, insulinas y anticoagulantes. Requieren ubicación, etiquetado y resguardo especiales + doble verificación al preparar y administrar."},
+  {c:"ger", d:"tem", q:"¿Qué es la NOM-019-SSA3-2013?", a:"Norma para la práctica de enfermería en el Sistema Nacional de Salud."},
+  {c:"ger", d:"tem", q:"Acreditación vs Certificación (calidad)", a:"• Acreditación: garantiza que la unidad cumple requisitos de seguridad, calidad y capacidad instalada.\n• Certificación: reconoce el cumplimiento de los estándares que fijan el nivel de calidad de la atención."},
+  {c:"ger", d:"tem", q:"Indicadores de calidad de los servicios de enfermería", a:"1. Ministración de medicamentos por vía oral\n2. Vigilancia y control de la venoclisis instalada\n3. Trato digno\n4. Prevención de caídas\n5. Prevención de úlceras por presión\n6. Prevención de infecciones por sonda vesical."},
+
+  // ---- Investigación (cualitativa y cuantitativa) ----
+  {c:"inv2", d:"tem", q:"¿Qué es la epistemología?", a:"La teoría del conocimiento: el estudio crítico del desarrollo, los métodos y los resultados de las ciencias. Estudia el conocimiento humano desde el punto de vista científico."},
+  {c:"inv2", d:"tem", q:"¿Qué es el método científico?", a:"Procedimiento sistemático para alcanzar un conocimiento objetivo de la realidad y dar respuesta a las interrogantes sobre el orden de la naturaleza. Consta de partes interdependientes."},
+  {c:"inv2", d:"tem", q:"Etapas del método científico", a:"1. Definición del problema\n2. Formulación de la hipótesis (razonamiento deductivo)\n3. Recopilación y análisis de datos\n4. Confirmación o rechazo de la hipótesis\n5. Resultados\n6. Conclusiones."},
+  {c:"inv2", d:"tem", q:"¿Qué es una hipótesis?", a:"Suposición que se admite provisionalmente para contestar la pregunta-problema; expresa la relación probable entre dos variables. Se redacta en forma afirmativa y se acepta o rechaza estadísticamente."},
+  {c:"inv2", d:"tem", q:"Variable independiente vs dependiente", a:"• Independiente (VI): la característica que se manipula para modificar a la otra (la 'causa').\n• Dependiente (VD): la característica que se asocia o cambia según la VI (el 'efecto/resultado')."},
+  {c:"inv2", d:"tem", q:"Investigación cualitativa vs cuantitativa", a:"• Cuantitativa: mide con números y estadística; parte de hipótesis y variables; busca generalizar.\n• Cualitativa: comprende significados y experiencias; suele tener más de un interrogante; no busca representar estadísticamente sino entender a fondo."},
+  {c:"inv2", d:"tem", q:"¿Qué es el método clínico?", a:"El método científico aplicado a la práctica clínica: problema (motivo de consulta) → historia clínica → diagnóstico presuntivo (hipótesis) → contrastación con estudios → diagnóstico de certeza y tratamiento."},
+  {c:"inv2", d:"tem", q:"¿Qué es el método epidemiológico?", a:"Razonamiento lógico empleado para conocer las características de las enfermedades y daños a la salud que afectan a las colectividades humanas, con el fin de prevenir y controlar."},
+  {c:"inv2", d:"tem", q:"Tipos de investigación en salud (Frenk)", a:"1. Biomédica\n2. En salud pública (epidemiológica y en sistemas/políticas de salud)\n3. Clínica."},
+  {c:"inv2", d:"tem", q:"Partes del protocolo de investigación", a:"Planteamiento del problema → objetivos → hipótesis → variables → metodología (diseño, población y muestra, instrumentos) → consideraciones éticas → informe final."},
+  {c:"inv2", d:"tem", q:"¿Qué hace bueno a un instrumento de investigación?", a:"Que tenga validez (mide lo que dice medir) y confiabilidad (resultados consistentes). Ejemplos: cuestionarios, escalas de medición, registros de observación, derivados de la operacionalización de las variables."},
+  {c:"inv2", d:"tem", q:"¿Cómo se redacta un objetivo general?", a:"Con verbos en infinitivo evaluables. Debe responder: ¿qué se va a hacer?, ¿en quién?, ¿dónde? y ¿cuándo/cuánto tiempo? Tiene correspondencia con la pregunta de investigación."},
+
+  // ---- Teorías de enfermería ----
+  {c:"teo2", d:"tem", q:"¿Qué es el metaparadigma de enfermería?", a:"Los cuatro conceptos centrales y universales de la disciplina: Persona, Salud, Entorno y Cuidado (Enfermería)."},
+  {c:"teo2", d:"tem", q:"Teoría del entorno", a:"Florence Nightingale: poner al paciente en las mejores condiciones para que la naturaleza actúe; el entorno (ventilación, higiene, luz) influye en la recuperación."},
+  {c:"teo2", d:"tem", q:"Escuela de las necesidades", a:"Define la enfermería en términos funcionales y de autocuidado.\n• Virginia Henderson (14 necesidades básicas)\n• Dorothea Orem (autocuidado)\n• Faye Abdellah (problemas de salud)."},
+  {c:"teo2", d:"tem", q:"Aporte de Dorothea Orem", a:"Modelo del autocuidado: la enfermería ayuda a la persona a recuperar su capacidad de cuidarse a sí misma cuando no puede hacerlo."},
+  {c:"teo2", d:"tem", q:"Escuela de la integración (interacción)", a:"Centrada en la relación enfermera-paciente.\n• Hildegard Peplau (relaciones interpersonales)\n• Imogene King (consecución de objetivos)\n• Ida Orlando, Paterson y Zderad."},
+  {c:"teo2", d:"tem", q:"Fases de la relación interpersonal de Peplau", a:"1. Orientación (la persona reconoce su necesidad)\n2. Identificación (se relaciona con quien le ayuda)\n3. Profundización/aprovechamiento (usa los servicios)\n4. Resolución (se satisface la necesidad y se cierra la relación)."},
+  {c:"teo2", d:"tem", q:"Escuela de los efectos deseables", a:"Modelos de adaptación y sistemas.\n• Callista Roy (adaptación)\n• Dorothy Johnson (sistema conductual)\n• Betty Neuman (sistemas)\n• Myra Levine (conservación)."},
+  {c:"teo2", d:"tem", q:"Modelo de adaptación de Callista Roy", a:"La persona es un sistema adaptativo. Cuatro modos de adaptación:\n• Fisiológico (actividad, reposo, nutrición)\n• Autoconcepto (yo físico y personal)\n• Función de rol (según los roles sociales)\n• Interdependencia (dar y recibir afecto)."},
+  {c:"teo2", d:"tem", q:"Escuela de la promoción de la salud", a:"Moyra Allen: promoción de la salud en la familia; la enfermera es facilitadora y motivadora del aprendizaje de hábitos saludables."},
+  {c:"teo2", d:"tem", q:"Escuela del ser humano unitario", a:"Paradigma de la transformación. La persona es un campo de energía en cambio constante.\n• Martha Rogers\n• Margaret Newman\n• Rosemarie Rizzo Parse."},
+  {c:"teo2", d:"tem", q:"Escuela del cuidado (Caring)", a:"Centrada en el cuidado humano y cultural.\n• Madeleine Leininger (cuidado transcultural: respeto a valores y estilo de vida)\n• Jean Watson (cuidado humano transpersonal)."},
+  {c:"teo2", d:"tem", q:"Las 5 etapas del proceso de atención de enfermería (PAE)", a:"1. Valoración (recolectar datos)\n2. Diagnóstico de enfermería (juicio sobre las respuestas humanas)\n3. Planeación (objetivos e intervenciones)\n4. Ejecución (poner en práctica el PLACE)\n5. Evaluación (comparar con los resultados esperados)."},
+  {c:"teo2", d:"tem", q:"Características del PAE", a:"Es sistemático, humanista, intencionado (centrado en objetivos), dinámico, flexible (se adapta a cualquier teoría) e interactivo (requiere la relación enfermera-paciente)."},
+  {c:"teo2", d:"tem", q:"PAE vs PLACE", a:"• PAE: el método (los 5 pasos para otorgar cuidados).\n• PLACE: el Plan de Cuidados de Enfermería, el instrumento donde se documentan la situación del paciente, los resultados esperados y las intervenciones."},
+];
+
+/* ============================================================
+   ALMACENAMIENTO (guarda tu avance entre sesiones)
+   ============================================================ */
+const KEY = "epac_flashcards_progress_v1";
+const QKEY = "epac_quiz_progress_v1";
+const memFallback = {};
+const store = {
+  async get(k){
+    if (typeof window !== "undefined" && window.storage){
+      try { const r = await window.storage.get(k); return r ? r.value : null; }
+      catch(e){ return memFallback[k] ?? null; }
+    }
+    return memFallback[k] ?? null;
+  },
+  async set(k,v){
+    if (typeof window !== "undefined" && window.storage){
+      try { await window.storage.set(k, v); return; } catch(e){}
+    }
+    memFallback[k] = v;
+  }
+};
+
+let progress = {};   // id -> {box, due, seen}
+const INTERVALS = {1:0, 2:1, 3:3, 4:7, 5:16}; // días
+const DAY = 86400000;
+
+CARDS.forEach((c,i)=>{ c.id = "c"+i; if(!c.d) c.d = "epac"; });
+
+/* Mazos (secciones): EPAC original y Temario resuelto */
+const DECKS = {
+  epac: {name:"Guía EPAC", sub:"Guía completa de enfermería"},
+  tem:  {name:"Temario resuelto", sub:"Legislación · Gerencia · Investigación · Teorías"}
+};
+let deck = "epac";
+function dCards(){ return CARDS.filter(c => c.d === deck); }
+function dQuiz(){ return QUIZ.filter(q => q.d === deck); }
+
+/* ============================================================
+   MODO EXAMEN — preguntas de opción múltiple (específicas)
+   o = opciones · a = índice de la correcta · w = por qué es correcta
+   e = por qué está mal cada opción (opcional, mismo orden que o)
+   ============================================================ */
+const QUIZ = [
+  // ---- Signos vitales: IMC desglosado ----
+  {c:"signos", q:"¿Qué rango de IMC corresponde a BAJO PESO?", o:["<18.5","18.5 – 24.9","25 – 29.9","≥30"], a:0,
+   w:"Bajo peso es un IMC menor a 18.5 kg/m².",
+   e:["","Ese es el rango de peso NORMAL.","Ese es SOBREPESO (preobesidad).","Ese es OBESIDAD."]},
+  {c:"signos", q:"¿Qué rango de IMC corresponde a peso NORMAL?", o:["<18.5","18.5 – 24.9","25 – 29.9","≥30"], a:1,
+   w:"El peso normal va de 18.5 a 24.9 kg/m².",
+   e:["Ese es BAJO PESO.","","Ese es SOBREPESO.","Ese es OBESIDAD."]},
+  {c:"signos", q:"¿Qué rango de IMC corresponde a SOBREPESO (preobesidad)?", o:["18.5 – 24.9","25 – 29.9","30 – 34.9","≥40"], a:1,
+   w:"Sobrepeso = IMC ≥25; la preobesidad es 25 – 29.9 kg/m².",
+   e:["Ese es peso NORMAL.","","Eso ya es OBESIDAD grado I.","Eso es obesidad III (mórbida)."]},
+  {c:"signos", q:"A partir de qué IMC se considera OBESIDAD?", o:["≥25","≥27","≥30","≥40"], a:2,
+   w:"Obesidad = IMC ≥30 kg/m² (I: 30–34.9 · II: 35–39.9 · III: ≥40).",
+   e:["≥25 es SOBREPESO, todavía no obesidad.","27 cae en sobrepeso.","","≥40 es obesidad grado III, pero la obesidad empieza en 30."]},
+  {c:"signos", q:"¿Qué IMC define la obesidad mórbida (grado III)?", o:["≥30","≥35","≥40","≥45"], a:2,
+   w:"La obesidad grado III o mórbida es IMC ≥40 kg/m².",
+   e:["≥30 es obesidad grado I.","≥35 es grado II.","","No es el corte estándar."]},
+  // ---- Signos vitales: temperatura ----
+  {c:"signos", q:"¿A partir de qué temperatura se considera FIEBRE en el adulto?", o:[">37.0 °C",">37.5 °C",">38.0 °C",">39.0 °C"], a:2,
+   w:"Fiebre (hipertermia) es >38.0 °C.",
+   e:["37 °C es temperatura normal.","37.5–37.9 °C es febrícula, todavía no fiebre.","","39 °C ya es fiebre, pero el corte empieza en 38."]},
+  {c:"signos", q:"¿Qué rango corresponde a FEBRÍCULA?", o:["36.0 – 37.4 °C","37.5 – 37.9 °C","38.0 – 38.9 °C","<35 °C"], a:1,
+   w:"Febrícula es 37.5 – 37.9 °C (entre lo normal y la fiebre).",
+   e:["Eso es temperatura oral normal.","","Eso ya es fiebre.","Eso es hipotermia."]},
+  {c:"signos", q:"¿Por debajo de qué temperatura hay HIPOTERMIA?", o:["<37 °C","<36 °C","<35 °C","<34 °C"], a:2,
+   w:"Hipotermia es temperatura central <35 °C.",
+   e:["<37 sigue siendo normal.","<36 aún no es hipotermia.","","Es más baja; el corte clínico es 35."]},
+  // ---- Endocrino ----
+  {c:"endo", q:"¿Qué valor de glucosa EN AYUNO diagnostica diabetes?", o:["≥100 mg/dL","≥110 mg/dL","≥126 mg/dL","≥140 mg/dL"], a:2,
+   w:"Glucosa en ayuno ≥126 mg/dL (con ≥8 h de ayuno) diagnostica diabetes.",
+   e:["100–125 es prediabetes (glucosa alterada en ayuno).","Sigue en rango de prediabetes.","","140 es el corte de la glucosa POSPRANDIAL/curva, no el ayuno."]},
+  {c:"endo", q:"Poliuria, polidipsia y baja de peso son típicos de:", o:["Diabetes mellitus","Hipotiroidismo","Insuficiencia renal","Anemia"], a:0,
+   w:"La tríada poliuria–polidipsia–pérdida de peso es clásica de diabetes mellitus.",
+   e:["","El hipotiroidismo da más bien aumento de peso y lentitud.","No produce esa tríada típica.","La anemia da fatiga y palidez, no poliuria."]},
+  {c:"endo", q:"¿Qué hormona produce los caracteres sexuales en la mujer?", o:["Estrógeno","Testosterona","Oxitocina","Insulina"], a:0,
+   w:"El estrógeno desarrolla los caracteres sexuales femeninos y regula el ciclo.",
+   e:["","Es la hormona sexual masculina.","La oxitocina actúa en parto y lactancia, no en la pubertad.","La insulina regula la glucosa."]},
+  {c:"endo", q:"¿Qué producen las células de Leydig?", o:["Estrógeno","Testosterona","Espermatozoides","FSH"], a:1,
+   w:"Las células de Leydig producen testosterona (estimuladas por LH).",
+   e:["El estrógeno es predominantemente femenino.","","Los espermatozoides los forman las células de Sertoli/túbulos seminíferos.","La FSH la produce la hipófisis, no el testículo."]},
+  {c:"endo", q:"¿Qué hormonas LIBERA la neurohipófisis?", o:["FSH y LH","GH y prolactina","ADH y oxitocina","TSH y ACTH"], a:2,
+   w:"La neurohipófisis almacena y libera ADH (vasopresina) y oxitocina.",
+   e:["FSH y LH son de la ADENOhipófisis.","GH y prolactina también son de la adenohipófisis.","","TSH y ACTH son de la adenohipófisis."]},
+  // ---- Farmacología ----
+  {c:"farma", q:"Antipirético que se diluye en 50 ml de solución fisiológica:", o:["Paracetamol","Metamizol","Ibuprofeno","Aspirina"], a:1,
+   w:"El metamizol (dipirona) se diluye en ~50 ml de fisiológica y se pasa lento.",
+   e:["El paracetamol IV viene en presentación lista, no se diluye así.","","El ibuprofeno IV tiene otra dilución.","La aspirina no se usa así como antipirético IV."]},
+  {c:"farma", q:"La aspirina (a dosis baja) actúa como:", o:["Anticoagulante","Antiagregante plaquetario","Trombolítico","Vasodilatador"], a:1,
+   w:"Es ANTIAGREGANTE: inhibe la COX-1 → ↓ tromboxano A2, las plaquetas no se agrupan.",
+   e:["No: los anticoagulantes (heparina, warfarina) actúan sobre factores de coagulación.","","Los trombolíticos disuelven el coágulo ya formado.","Su efecto principal no es vasodilatador."]},
+  {c:"farma", q:"Hidróxido de aluminio + hidróxido de magnesio es un:", o:["Antiácido","Antibiótico","Antiemético","Laxante"], a:0,
+   w:"Es un antiácido que neutraliza el ácido gástrico; se combinan para equilibrar el efecto intestinal.",
+   e:["","No tiene acción antimicrobiana.","No está dirigido al vómito.","Solo el magnesio solo afloja; combinado no es un laxante."]},
+  {c:"farma", q:"¿Para qué sirve principalmente la cloroquina?", o:["Antipalúdico y lupus/AR","Antibiótico de amplio espectro","Antihipertensivo","Antidiabético"], a:0,
+   w:"Antipalúdico y, por su efecto inmunomodulador, se usa en lupus y artritis reumatoide.",
+   e:["","No es antibiótico.","No baja la presión.","No trata la diabetes."]},
+  {c:"farma", q:"Efecto adverso MÁS característico de la difenhidramina:", o:["Insomnio","Somnolencia/sedación","Hipertensión","Diarrea"], a:1,
+   w:"Es un antihistamínico con efecto anticolinérgico: produce somnolencia/sedación.",
+   e:["Al contrario, da sueño (el insomnio es reacción paradójica en niños).","","No es su efecto típico.","Más bien causa estreñimiento."]},
+  {c:"farma", q:"Alteración electrolítica típica de los diuréticos de asa (furosemida):", o:["Hiperkalemia","Hipokalemia","Hipernatremia","Hipercalcemia"], a:1,
+   w:"Provocan HIPOkalemia (y también pierden Na, Ca y Mg).",
+   e:["Es lo contrario: pierden potasio.","","Pierden sodio (hiponatremia).","Pierden calcio (hipocalcemia)."]},
+  // ---- Salud mental ----
+  {c:"sm", q:"Trastorno con episodios maníacos y depresivos alternados:", o:["Depresión mayor","Trastorno bipolar","Trastorno de pánico","Esquizofrenia"], a:1,
+   w:"El trastorno bipolar alterna manía/hipomanía con depresión.",
+   e:["La depresión mayor no tiene fase maníaca.","","El pánico son crisis de miedo, no cambios de ánimo sostenidos.","La esquizofrenia es un trastorno psicótico, no del ánimo."]},
+  {c:"sm", q:"Crisis recurrentes de miedo intenso con sensación de catástrofe o de morir:", o:["Trastorno de pánico","Fobia social","Depresión","TOC"], a:0,
+   w:"Es el trastorno de pánico: ataques inesperados con miedo a morir o perder el control.",
+   e:["","La fobia social es miedo al juicio de otros, no crisis catastróficas.","La depresión es del estado de ánimo.","El TOC son obsesiones y compulsiones."]},
+  {c:"sm", q:"La NOM-025-SSA2-2014 regula:", o:["El expediente clínico","La atención hospitalaria psiquiátrica","La vacunación","El manejo de residuos"], a:1,
+   w:"Regula la operación de los establecimientos de atención hospitalaria médico-psiquiátrica.",
+   e:["El expediente clínico es la NOM-004.","","La vacunación es la NOM-036.","Los residuos peligrosos biológico-infecciosos son la NOM-087."]},
+  // ---- Inmunología ----
+  {c:"inmuno", q:"¿Qué inmunoglobulina media las reacciones alérgicas?", o:["IgG","IgA","IgE","IgM"], a:2,
+   w:"La IgE media la hipersensibilidad tipo I (alergias) y la defensa antiparasitaria.",
+   e:["La IgG es la más abundante, da memoria; no media alergias.","La IgA protege mucosas.","","La IgM es la primera en una infección aguda."]},
+  {c:"inmuno", q:"El shock anafiláctico es una hipersensibilidad tipo:", o:["Tipo I","Tipo II","Tipo III","Tipo IV"], a:0,
+   w:"Es hipersensibilidad tipo I, inmediata, mediada por IgE.",
+   e:["","La tipo II es citotóxica (por IgG/IgM).","La tipo III es por complejos inmunes.","La tipo IV es tardía, mediada por células T."]},
+  {c:"inmuno", q:"Fármaco de PRIMERA elección en la anafilaxia:", o:["Antihistamínico oral","Adrenalina (epinefrina) IM","Corticoide IV","Salbutamol"], a:1,
+   w:"La adrenalina IM es el tratamiento de primera línea y salva la vida.",
+   e:["El antihistamínico es coadyuvante, no de primera línea.","","El corticoide ayuda a prevenir la fase tardía, pero no es lo primero.","El salbutamol solo apoya el broncoespasmo."]},
+  // ---- Anatomía ----
+  {c:"anat", q:"Parte sensitiva del ojo (capta la luz):", o:["Córnea","Retina","Cristalino","Iris"], a:1,
+   w:"La retina transforma la luz en impulsos nerviosos.",
+   e:["La córnea es transparente y refracta, no capta.","","El cristalino enfoca la imagen.","El iris regula la cantidad de luz."]},
+  {c:"anat", q:"¿Qué capa germinal forma el sistema nervioso central?", o:["Ectodermo","Mesodermo","Endodermo","Trofoblasto"], a:0,
+   w:"El ectodermo forma el tubo neural → cerebro y médula.",
+   e:["","El mesodermo forma músculo, hueso y circulatorio.","El endodermo forma digestivo y respiratorio.","El trofoblasto forma la placenta."]},
+  {c:"anat", q:"¿Dónde se filtra la sangre en el riñón?", o:["Túbulo proximal","Glomérulo","Asa de Henle","Uréter"], a:1,
+   w:"La filtración ocurre en el glomérulo (corpúsculo renal, con la cápsula de Bowman).",
+   e:["Ahí se reabsorbe, no se filtra.","","Ahí se concentra la orina.","El uréter solo transporta orina."]},
+  {c:"anat", q:"Capa de la piel con glándulas sudoríparas y sebáceas:", o:["Epidermis","Dermis","Hipodermis","Mucosa"], a:1,
+   w:"La dermis (capa intermedia) aloja glándulas, folículos, vasos y nervios.",
+   e:["La epidermis es la capa más externa, sin glándulas.","","La hipodermis es grasa subcutánea.","La mucosa no es capa de la piel."]},
+  {c:"anat", q:"El nervio frénico se origina en:", o:["C1-C2-C3","C3-C4-C5","C5-C6-C7","T1-T2-T3"], a:1,
+   w:"Nace de C3-C4-C5 e inerva el diafragma ('C3,4,5 mantienen vivo el diafragma').",
+   e:["Son raíces más altas.","","Esas raíces forman parte del plexo braquial.","Son torácicas, no cervicales."]},
+  {c:"anat", q:"La circulación MAYOR (sistémica) INICIA en:", o:["Ventrículo izquierdo","Ventrículo derecho","Aurícula derecha","Aurícula izquierda"], a:0,
+   w:"Inicia en el ventrículo izquierdo (sale por la aorta).",
+   e:["","Ese es el inicio de la circulación MENOR (pulmonar).","Ahí TERMINA la circulación mayor.","Ahí termina la circulación menor."]},
+  {c:"anat", q:"La circulación MENOR (pulmonar) TERMINA en:", o:["Aurícula derecha","Aurícula izquierda","Ventrículo izquierdo","Aorta"], a:1,
+   w:"Termina en la aurícula izquierda (llega por las venas pulmonares).",
+   e:["Ahí termina la circulación mayor.","","De ahí pasa la sangre, pero no es donde 'termina' la menor.","La aorta es el inicio de la circulación mayor."]},
+  // ---- Hematología ----
+  {c:"hema", q:"Anemia por deficiencia de hierro:", o:["Megaloblástica","Ferropénica","Hemolítica","Aplásica"], a:1,
+   w:"La anemia ferropénica (la más común) se debe a falta de hierro.",
+   e:["Esa es por déficit de B12/ácido fólico.","","Esa es por destrucción de glóbulos rojos.","Esa es por falla de la médula ósea."]},
+  // ---- Obstetricia ----
+  {c:"obst", q:"Líquido amniótico verde se debe a:", o:["Sangre fetal","Meconio (intestino fetal)","Orina fetal","Vérnix"], a:1,
+   w:"El color verde es por meconio, que expulsa el intestino del feto (suele indicar estrés).",
+   e:["La sangre lo teñiría de rojo/café.","","La orina fetal es parte normal y clara.","El vérnix es la capa blanca que cubre la piel."]},
+  {c:"obst", q:"Signo de ALARMA en el tercer trimestre:", o:["Movimientos fetales normales","Disminución de movimientos fetales","Aumento de apetito","Acidez ocasional"], a:1,
+   w:"La disminución/ausencia de movimientos fetales es signo de alarma y requiere valoración.",
+   e:["Los movimientos normales son tranquilizadores.","","El apetito no es un signo de alarma.","La acidez es molestia común, no alarma."]},
+  {c:"obst", q:"Primera causa DIRECTA de muerte materna:", o:["Trastornos hipertensivos (preeclampsia)","Anemia","Diabetes","Influenza"], a:0,
+   w:"Las causas directas principales son los trastornos hipertensivos y las hemorragias.",
+   e:["","La anemia contribuye pero no es causa directa principal.","La diabetes es causa INDIRECTA.","La influenza es causa indirecta."]},
+  // ---- Pediatría ----
+  {c:"pedia", q:"RN con salivación excesiva y cianosis al alimentarse; la sonda no pasa al estómago:", o:["Estenosis pilórica","Atresia esofágica","Reflujo","Labio leporino"], a:1,
+   w:"Es atresia esofágica: el esófago termina en saco ciego; la sonda no llega al estómago.",
+   e:["La estenosis pilórica da vómito en proyectil, no salivación.","","El reflujo no impide pasar la sonda.","El labio leporino es un defecto labial visible."]},
+  {c:"pedia", q:"Maniobras CLÍNICAS para displasia de cadera en el recién nacido:", o:["Ortolani y Barlow","Graf","Índice acetabular","Lasègue"], a:0,
+   w:"Ortolani y Barlow son las maniobras clínicas exploratorias del RN.",
+   e:["","Graf es por ECOGRAFÍA, no clínica.","El índice acetabular es radiográfico, en niños mayores.","Lasègue evalúa ciática, no cadera del bebé."]},
+  {c:"pedia", q:"Las manchas de Koplik son signo patognomónico de:", o:["Varicela","Rubéola","Sarampión","Escarlatina"], a:2,
+   w:"Las manchas de Koplik (en mucosa oral) son típicas del sarampión.",
+   e:["La varicela da vesículas en distintos estadios.","La rubéola no da Koplik.","","La escarlatina da lengua aframbuesada, no Koplik."]},
+  // ---- Cardiorrespiratorio ----
+  {c:"cardioresp", q:"Disnea al acostarse que mejora al sentarse:", o:["Ortopnea","Taquipnea","Apnea","Disnea de esfuerzo"], a:0,
+   w:"Es ortopnea, típica de insuficiencia cardíaca izquierda.",
+   e:["","Taquipnea es solo respirar rápido.","Apnea es pausa de la respiración.","La de esfuerzo aparece al actividad, no al acostarse."]},
+  {c:"cardioresp", q:"Ruido respiratorio agudo y musical, sobre todo en la espiración:", o:["Estertor","Sibilancia","Roncus","Estridor"], a:1,
+   w:"La sibilancia es un silbido agudo por estrechamiento bronquial (asma, EPOC).",
+   e:["Los estertores (crepitantes) suenan como burbujas, no musical.","","El roncus es grave, no agudo.","El estridor es inspiratorio y de vía aérea alta."]},
+  {c:"cardioresp", q:"El drenaje postural se basa en:", o:["Aplicar oxígeno","Usar la gravedad para movilizar secreciones","Administrar broncodilatadores","Aspirar con sonda"], a:1,
+   w:"Usa la gravedad y posiciones para llevar las secreciones a vías mayores y expulsarlas.",
+   e:["El oxígeno es otra terapia.","","Los broncodilatadores son farmacológicos.","La aspiración es un procedimiento distinto."]},
+  // ---- Gastro ----
+  {c:"gastro", q:"Causa #1 a nivel mundial de gastritis:", o:["Estrés","Helicobacter pylori","Alcohol","AINEs"], a:1,
+   w:"Helicobacter pylori es la causa más frecuente de gastritis en el mundo.",
+   e:["El estrés contribuye pero no es la causa #1.","","El alcohol irrita pero no es la causa principal global.","Los AINEs son causa frecuente, pero no la #1."]},
+  {c:"gastro", q:"Dolor intenso, 'abdomen en tabla' (rigidez) y fiebre:", o:["Gastritis","Colitis","Peritonitis","Pancreatitis"], a:2,
+   w:"El abdomen rígido 'en tabla' es clásico de peritonitis (urgencia).",
+   e:["La gastritis no rigidiza el abdomen.","La colitis da diarrea y cólico bajo.","","La pancreatitis irradia a la espalda, sin 'tabla'."]},
+  {c:"gastro", q:"Dolor en epigastrio que irradia a la espalda y empeora al comer; causa #1: cálculos biliares:", o:["Apendicitis","Pancreatitis","Colitis","Úlcera"], a:1,
+   w:"Es pancreatitis: dolor en cinturón hacia la espalda, su causa aguda #1 son los cálculos.",
+   e:["La apendicitis duele en fosa ilíaca derecha.","","La colitis afecta el colon, dolor bajo.","La úlcera no suele irradiar 'en cinturón'."]},
+  // ---- Neuro y urgencias ----
+  {c:"neuro", q:"¿A cuántos cmH₂O se mantiene el globo (cuff) de la traqueostomía?", o:["5 – 10","10 – 20","20 – 30","30 – 40"], a:2,
+   w:"Entre 20 y 30 cmH₂O: sella sin dañar la mucosa traqueal.",
+   e:["Muy baja: habría fuga de aire.","Aún insuficiente para sellar bien.","","Demasiada presión: riesgo de isquemia de la tráquea."]},
+  {c:"neuro", q:"El potasio (KCl) por vía intravenosa se administra:", o:["En bolo rápido","Siempre diluido y lento","Sin monitoreo","Solo intramuscular"], a:1,
+   w:"SIEMPRE diluido y lento (máx ~10 mEq/h periférico); el bolo puede causar paro.",
+   e:["El bolo de potasio puede ser mortal (paro cardíaco).","","Requiere monitoreo de ECG.","No se aplica IM."]},
+  {c:"neuro", q:"Antídoto de la toxicidad por sulfato de magnesio:", o:["Atropina","Gluconato de calcio","Naloxona","Flumazenil"], a:1,
+   w:"El gluconato de calcio IV revierte la toxicidad por magnesio.",
+   e:["La atropina es para bradicardia/intoxicación colinérgica.","","La naloxona revierte opioides.","El flumazenil revierte benzodiacepinas."]},
+  // ---- Teorías ----
+  {c:"teoria", q:"Teoría del cuidado humano (transpersonal):", o:["Watson","Leininger","Orem","Roy"], a:0,
+   w:"Jean Watson: el cuidado humano transpersonal es la esencia de la enfermería.",
+   e:["","Leininger es cuidado transcultural.","Orem es el autocuidado.","Roy es la adaptación."]},
+  {c:"teoria", q:"Teoría de la enfermería transcultural (cuidado según la cultura):", o:["Watson","Leininger","Henderson","Nightingale"], a:1,
+   w:"Madeleine Leininger: diversidad y universalidad de los cuidados culturales.",
+   e:["Watson es el cuidado humano.","","Henderson son las 14 necesidades.","Nightingale es la teoría del entorno."]},
+  {c:"teoria", q:"Autora de la teoría del CONFORT:", o:["Merle Mishel","Katharine Kolcaba","Dorothea Orem","Callista Roy"], a:1,
+   w:"Katharine Kolcaba: alivio, tranquilidad y trascendencia, en 4 ámbitos.",
+   e:["Mishel es la teoría de la incertidumbre.","","Orem es el autocuidado.","Roy es la adaptación."]},
+  {c:"teoria", q:"¿Cuáles son los 4 conceptos del metaparadigma de enfermería?", o:["Persona, Entorno, Salud, Enfermería","Valoración, Dx, Plan, Evaluación","Cuerpo, Mente, Alma, Entorno","Promoción, Prevención, Curación, Rehab."], a:0,
+   w:"El metaparadigma lo forman Persona, Entorno, Salud y Enfermería.",
+   e:["","Esas son etapas del proceso de enfermería.","No es el metaparadigma.","Esos son niveles de prevención/atención."]},
+  {c:"teoria", q:"¿Cuál es la PRIMERA etapa del proceso de enfermería?", o:["Diagnóstico","Valoración","Planeación","Evaluación"], a:1,
+   w:"El orden es: Valoración → Diagnóstico → Planeación → Ejecución → Evaluación.",
+   e:["El diagnóstico va DESPUÉS de valorar.","","La planeación es la tercera.","La evaluación es la última."]},
+  {c:"teoria", q:"En la pirámide de Maslow, las necesidades de la BASE son:", o:["Seguridad","Fisiológicas","Estima","Autorrealización"], a:1,
+   w:"En la base están las fisiológicas (respirar, comer, dormir): las más prioritarias.",
+   e:["La seguridad es el segundo nivel.","","La estima es un nivel superior.","La autorrealización está en la cima."]},
+  // ---- Investigación ----
+  {c:"invest", q:"Operador booleano que EXCLUYE un término:", o:["AND","OR","NOT","NEAR"], a:2,
+   w:"NOT excluye resultados que contengan ese término.",
+   e:["AND exige que estén ambos términos.","OR incluye cualquiera de los dos.","","NEAR busca cercanía, no exclusión."]},
+  {c:"invest", q:"Estudia la EXPERIENCIA subjetiva vivida por la persona:", o:["Etnografía","Fenomenología","Estudio de caso","Encuesta"], a:1,
+   w:"La fenomenología estudia cómo la persona vive y da significado a una experiencia.",
+   e:["La etnografía estudia una cultura/grupo desde dentro.","","El estudio de caso analiza un caso a fondo.","La encuesta es cuantitativa."]},
+  {c:"invest", q:"En investigación CUALITATIVA, la muestra se selecciona:", o:["Al azar","De forma intencional","Con fórmula estadística","Por sorteo"], a:1,
+   w:"Es intencional (propositiva); el tamaño se define por saturación, no por azar.",
+   e:["El azar es de la cuantitativa.","","Las fórmulas son cuantitativas.","El sorteo es muestreo aleatorio."]},
+  {c:"invest", q:"Ejemplo de FUENTE PRIMARIA:", o:["Enciclopedia","Artículo científico original","Libro de texto","Reseña"], a:1,
+   w:"Las fuentes primarias son datos originales: artículos originales, tesis, leyes, censos.",
+   e:["La enciclopedia es fuente terciaria.","","El libro de texto es fuente secundaria.","Una reseña interpreta a otros: secundaria."]},
+  // ---- Administración ----
+  {c:"admin", q:"En el FODA, las Fortalezas y Debilidades son factores:", o:["Internos","Externos","Económicos","Legales"], a:0,
+   w:"Fortalezas y Debilidades son INTERNOS; Oportunidades y Amenazas son EXTERNOS.",
+   e:["","Lo externo son Oportunidades y Amenazas.","No se clasifican por tipo económico.","Tampoco por tipo legal."]},
+  {c:"admin", q:"¿Dónde registra enfermería los signos vitales?", o:["Diagrama de Pareto","Hoja/gráfica de enfermería","Diagrama de flujo","Histograma"], a:1,
+   w:"En la hoja de registros clínicos / gráfica de signos vitales de enfermería.",
+   e:["El Pareto es herramienta de calidad (causas).","","El diagrama de flujo grafica procesos.","El histograma muestra distribución de datos."]},
+  {c:"admin", q:"Administrar es planear, organizar, dirigir y:", o:["Vender","Controlar","Producir","Delegar"], a:1,
+   w:"Las 4 funciones son planear, organizar, dirigir y controlar.",
+   e:["No es una función del proceso administrativo.","","La producción es un área, no la función.","Delegar es parte de dirigir, no la cuarta función."]},
+  // ---- Ética y derecho ----
+  {c:"etica", q:"Apoderarse de un bien ajeno usando VIOLENCIA o fuerza es:", o:["Hurto","Robo","Fraude","Extorsión"], a:1,
+   w:"Robo = tomar lo ajeno con violencia, amenaza o fuerza. Sin violencia sería hurto.",
+   e:["El hurto NO usa violencia ni fuerza.","","El fraude usa engaño.","La extorsión obliga a entregar algo bajo amenaza."]},
+  {c:"etica", q:"Artículo de la Constitución que reconoce el derecho a la protección de la salud:", o:["Artículo 3º","Artículo 4º","Artículo 27","Artículo 123"], a:1,
+   w:"El Artículo 4º establece el derecho a la protección de la salud.",
+   e:["El 3º es el derecho a la educación.","","El 27 es sobre la propiedad/tierra.","El 123 es sobre el trabajo."]},
+  {c:"etica", q:"La parte DOGMÁTICA de la Constitución mexicana abarca los artículos:", o:["1 al 29","30 al 38","39 al 136","1 al 136"], a:0,
+   w:"La parte dogmática (derechos y garantías) son los artículos 1 al 29.",
+   e:["","Esos tratan de la nacionalidad y ciudadanía.","Esa es la parte orgánica (estructura del Estado).","Es toda la Constitución, no solo la dogmática."]},
+  {c:"etica", q:"Artículo del Código Penal Federal sobre la responsabilidad del profesional en su ejercicio:", o:["Artículo 123","Artículo 228","Artículo 302","Artículo 51"], a:1,
+   w:"El artículo 228 CPF responsabiliza a profesionistas y técnicos por delitos en su ejercicio.",
+   e:["No corresponde a este tema.","","El 302 define el homicidio.","No es el artículo de responsabilidad profesional."]},
+  // ---- Salud pública ----
+  {c:"salud", q:"El Índice de Desarrollo Humano (IDH) mide:", o:["Solo el ingreso","Salud, educación e ingreso","Solo la salud","Empleo y vivienda"], a:1,
+   w:"El IDH combina salud (esperanza de vida), educación y nivel de vida (INB per cápita).",
+   e:["El ingreso es solo una de las tres dimensiones.","","La salud es una de tres.","No son las dimensiones del IDH."]},
+  {c:"salud", q:"En el IDH, la dimensión de SALUD se mide con:", o:["Número de hospitales","Esperanza de vida al nacer","Gasto en salud","Número de médicos"], a:1,
+   w:"La salud se mide por la esperanza de vida al nacer.",
+   e:["No es el indicador del IDH.","","Tampoco.","Tampoco; el IDH usa esperanza de vida."]},
+  {c:"salud", q:"Según el Informe 2025 (PNUD), ¿en qué lugar del IDH está México?", o:["Lugar 50 de 193","Lugar 81 de 193","Lugar 120 de 193","Lugar 10 de 193"], a:1,
+   w:"México se ubicó en el lugar 81 de 193, con puntuación 0.789 (subió desde el 86).",
+   e:["Está más abajo en la lista.","","Está más arriba que esa posición.","No está entre los primeros lugares."]},
+  {c:"salud", q:"La esterilización elimina:", o:["Solo bacterias","Solo virus","Toda forma de vida, incluidas esporas","Solo hongos"], a:2,
+   w:"La esterilización destruye TODA forma de vida microbiana, incluidas las esporas.",
+   e:["No solo bacterias.","No solo virus.","","No solo hongos: lo elimina todo, incluso esporas."]},
+  {c:"salud", q:"La ASEPSIA se refiere a:", o:["Eliminar microbios en piel/tejido vivo","Prevenir la contaminación por microbios","Esterilizar instrumental","Lavar con jabón"], a:1,
+   w:"Asepsia = prevenir la contaminación. La antisepsia es eliminar microbios en tejido vivo.",
+   e:["Eso es ANTISEPSIA (alcohol, yodo, clorhexidina).","","La esterilización es un proceso distinto.","El lavado es parte, pero la asepsia es el concepto de prevención."]},
+  // ---- Cuidados ----
+  {c:"cuidados", q:"Solución para un paciente con alcalosis metabólica:", o:["Glucosada 5%","Salina (fisiológica) 0.9%","Bicarbonato","Hartmann"], a:1,
+   w:"Solución salina isotónica al 0.9% (la alcalosis suele ser sensible a cloruro).",
+   e:["La glucosada no corrige la alcalosis.","","El bicarbonato EMPEORA la alcalosis.","Hartmann es alcalinizante; no es de elección aquí."]},
+  {c:"cuidados", q:"Posición correcta para alimentar por sonda nasogástrica:", o:["Decúbito supino plano","Semifowler (45°)","Trendelenburg","De pie"], a:1,
+   w:"Semifowler a ~45° reduce el riesgo de broncoaspiración.",
+   e:["Acostado plano aumenta el riesgo de broncoaspiración.","","Trendelenburg (cabeza abajo) es peligroso aquí.","No es práctico ni seguro."]},
+  {c:"cuidados", q:"Complicación INMEDIATA de la colostomía (estoma oscuro/negro):", o:["Prolapso tardío","Isquemia/necrosis del estoma","Hernia paraestomal","Estenosis crónica"], a:1,
+   w:"Un estoma oscuro o negro indica isquemia/necrosis: complicación inmediata grave.",
+   e:["El prolapso suele ser tardío.","","La hernia paraestomal es complicación tardía.","La estenosis es crónica."]},
+  {c:"cuidados", q:"Complicación GRAVE de la sonda nasogástrica:", o:["Sequedad de boca","Broncoaspiración (neumonía aspirativa)","Mal sabor","Hipo"], a:1,
+   w:"Si la sonda pasa a la tráquea o hay reflujo, puede causar broncoaspiración y neumonía.",
+   e:["Es molestia menor.","","No es una complicación grave.","Tampoco es grave."]},
+  {c:"cuidados", q:"El WHOQOL-BREF evalúa:", o:["El dolor","La calidad de vida","El estado nutricional","El riesgo de caídas"], a:1,
+   w:"Mide la calidad de vida en 4 dominios: físico, psicológico, social y ambiental.",
+   e:["No es una escala de dolor.","","No mide nutrición.","No es una escala de caídas."]},
+
+  /* ================= TEMARIO RESUELTO — examen ================= */
+  // ---- Legislación ----
+  {c:"leg", d:"tem", q:"El documento escrito del consentimiento informado sirve para:", o:["Sustituir la explicación verbal","Resguardar que se informó y el paciente comprendió","Eximir de responsabilidad al hospital","Autorizar cualquier procedimiento futuro"], a:1,
+   w:"El consentimiento informado es el proceso de informar; el documento solo resguarda que se informó y se comprendió.",
+   e:["No sustituye la información verbal: la complementa.","","No exime de responsabilidad por mala práctica.","Es específico para el procedimiento informado, no para todo."]},
+  {c:"leg", d:"tem", q:"¿Qué NOM regula el expediente clínico?", o:["NOM-004-SSA3-2012","NOM-019-SSA3-2013","NOM-087-SSA1-2002","NOM-025-SSA2"], a:0,
+   w:"El expediente clínico lo regula la NOM-004-SSA3-2012.",
+   e:["","Esa es la práctica de enfermería en el SNS.","Esa es de residuos peligrosos biológico-infecciosos (RPBI).","Esa es de atención hospitalaria psiquiátrica."]},
+  {c:"leg", d:"tem", q:"El principio bioético 'primum non nocere' (no dañar) es:", o:["Autonomía","Beneficencia","No maleficencia","Justicia"], a:2,
+   w:"No maleficencia = no producir daño; es de ámbito público y su incumplimiento está penado por ley.",
+   e:["La autonomía es respetar las decisiones del paciente.","La beneficencia es hacer el bien (ámbito privado).","","La justicia es la equidad en cargas y beneficios."]},
+  {c:"leg", d:"tem", q:"¿Qué es la CONAMED?", o:["Un sindicato de médicos","Un órgano de arbitraje médico de la Secretaría de Salud","Un tribunal penal","Una aseguradora pública"], a:1,
+   w:"La Comisión Nacional de Arbitraje Médico resuelve conflictos médico-paciente por conciliación y arbitraje.",
+   e:["No es un sindicato.","","No es un tribunal penal; usa medios alternativos.","No es una aseguradora."]},
+  {c:"leg", d:"tem", q:"Dejar morir a tiempo sin medios extraordinarios ('muerte digna') es:", o:["Eutanasia activa","Distanasia","Ortotanasia","Eutanasia involuntaria"], a:2,
+   w:"La ortotanasia es dejar morir sin encarnizamiento, respetando la dignidad del paciente terminal.",
+   e:["La eutanasia activa provoca la muerte con un agente.","La distanasia es el encarnizamiento terapéutico (lo opuesto).","","La eutanasia involuntaria es sin manifestación del paciente."]},
+  {c:"leg", d:"tem", q:"La Ley General de Salud reglamenta el derecho de qué artículo constitucional?", o:["Artículo 3º","Artículo 4º","Artículo 5º","Artículo 123º"], a:1,
+   w:"Reglamenta el derecho a la protección de la salud del artículo 4º.",
+   e:["El 3º es educación.","","El 5º es libertad de trabajo/profesión.","El 123º es derecho al trabajo."]},
+
+  // ---- Gerencia ----
+  {c:"ger", d:"tem", q:"¿Cuáles son las 4 etapas del proceso administrativo?", o:["Planear, organizar, dirigir y controlar","Prever, ejecutar, vender y evaluar","Diagnóstico, plan, acción y cierre","Misión, visión, valores y metas"], a:0,
+   w:"El proceso administrativo es planeación, organización, dirección y control.",
+   e:["","No son las etapas clásicas.","Esas son etapas de un proyecto, no del proceso administrativo.","Esos son elementos de la filosofía organizacional."]},
+  {c:"ger", d:"tem", q:"En el proceso administrativo, la fase MECÁNICA incluye:", o:["Dirección y control","Planeación y organización","Solo la dirección","Control y evaluación"], a:1,
+   w:"Fase mecánica = planeación + organización (qué y cómo). Fase dinámica = dirección + control.",
+   e:["Esas son la fase dinámica.","","La dirección es de la fase dinámica.","Son de la fase dinámica."]},
+  {c:"ger", d:"tem", q:"El padre de la administración científica (eficiencia operativa, de abajo hacia arriba) es:", o:["Henry Fayol","Frederick Taylor","Abraham Maslow","Elton Mayo"], a:1,
+   w:"Taylor impulsó la administración científica, enfocada en la eficiencia de las tareas (de las partes al todo).",
+   e:["Fayol es la teoría clásica (estructura, de arriba hacia abajo).","","Maslow es la pirámide de necesidades.","Mayo es la escuela de relaciones humanas."]},
+  {c:"ger", d:"tem", q:"¿Cuántas son las Acciones Esenciales para la Seguridad del Paciente (AESP)?", o:["4","6","8","10"], a:2,
+   w:"Son 8 AESP (identificación, comunicación, medicación, procedimientos, infecciones, caídas, eventos centinela y cultura de seguridad).",
+   e:["Son más.","Son más.","","No, son 8."]},
+  {c:"ger", d:"tem", q:"La etapa del proceso administrativo donde se mide lo logrado vs lo planeado es:", o:["Planeación","Organización","Dirección","Control"], a:3,
+   w:"El control mide los resultados, los compara con lo planeado e inicia acciones correctivas.",
+   e:["La planeación define qué hacer.","La organización distribuye tareas y recursos.","La dirección ejecuta y motiva.",""]},
+  {c:"ger", d:"tem", q:"La 'visión' de una organización se refiere a:", o:["Su razón de ser presente","La imagen a la que aspira a largo plazo","Sus reglas de conducta","Su estructura jerárquica"], a:1,
+   w:"La visión es la imagen ideal de cómo espera ser la organización en el futuro.",
+   e:["Esa es la misión (presente).","","Esas son las políticas/normas.","Eso es el organigrama."]},
+
+  // ---- Investigación ----
+  {c:"inv2", d:"tem", q:"En investigación, la variable que se MANIPULA es la:", o:["Dependiente","Independiente","Extraña","De control"], a:1,
+   w:"La variable independiente (VI) es la que se manipula para modificar a la dependiente.",
+   e:["La dependiente es el resultado que se mide.","","La extraña interfiere y se intenta controlar.","La de control se mantiene constante."]},
+  {c:"inv2", d:"tem", q:"La epistemología es:", o:["El estudio de las leyes","La teoría del conocimiento","El estudio de la sociedad","El método estadístico"], a:1,
+   w:"La epistemología es la teoría del conocimiento: estudia el desarrollo, métodos y resultados de las ciencias.",
+   e:["Eso se acerca al derecho.","","Eso es la sociología.","La estadística es una herramienta, no la epistemología."]},
+  {c:"inv2", d:"tem", q:"¿Cómo se redacta una hipótesis?", o:["Como pregunta","En forma afirmativa","En forma negativa","Como objetivo en infinitivo"], a:1,
+   w:"La hipótesis se redacta en forma afirmativa, para poder aceptarla o rechazarla estadísticamente.",
+   e:["La pregunta es el planteamiento del problema, no la hipótesis.","","No se redacta en negativo.","En infinitivo se redactan los objetivos, no la hipótesis."]},
+  {c:"inv2", d:"tem", q:"La investigación CUALITATIVA se caracteriza por:", o:["Medir con estadística","Comprender significados y experiencias","Manipular variables numéricas","Buscar representatividad estadística"], a:1,
+   w:"La cualitativa busca comprender a fondo significados y experiencias; suele tener varios interrogantes.",
+   e:["Medir con estadística es propio de la cuantitativa.","","Manipular variables es cuantitativo (experimental).","La representatividad estadística es de la cuantitativa."]},
+  {c:"inv2", d:"tem", q:"El método científico aplicado a la práctica clínica es el:", o:["Método epidemiológico","Método clínico","Método empírico","Método dialéctico"], a:1,
+   w:"El método clínico es el método científico aplicado para estudiar el proceso salud-enfermedad de un paciente.",
+   e:["El epidemiológico estudia poblaciones, no al individuo.","","El empírico se basa solo en la experiencia.","El dialéctico es filosófico."]},
+  {c:"inv2", d:"tem", q:"Según Frenk, ¿cuáles son los tipos de investigación en salud?", o:["Biomédica, en salud pública y clínica","Básica, aplicada y mixta","Documental, de campo y experimental","Cualitativa, cuantitativa y mixta"], a:0,
+   w:"Frenk clasifica la investigación en salud en biomédica, en salud pública y clínica.",
+   e:["","Esa es otra clasificación general.","Esa es por su fuente/diseño.","Esa es por su enfoque, no la de Frenk."]},
+
+  // ---- Teorías ----
+  {c:"teo2", d:"tem", q:"¿Cuáles son los 4 conceptos del metaparadigma de enfermería?", o:["Persona, Salud, Entorno y Cuidado","Valorar, diagnosticar, planear y evaluar","Físico, mental, social y espiritual","Misión, visión, valores y metas"], a:0,
+   w:"El metaparadigma lo forman Persona, Salud, Entorno y Cuidado (Enfermería).",
+   e:["","Esas son etapas del PAE.","Esas son dimensiones de la salud.","Esos son elementos administrativos."]},
+  {c:"teo2", d:"tem", q:"La Teoría del entorno es de:", o:["Virginia Henderson","Florence Nightingale","Callista Roy","Dorothea Orem"], a:1,
+   w:"Florence Nightingale: el entorno (higiene, ventilación, luz) influye en la recuperación.",
+   e:["Henderson es la de las 14 necesidades.","","Roy es el modelo de adaptación.","Orem es el autocuidado."]},
+  {c:"teo2", d:"tem", q:"El modelo del AUTOCUIDADO es de:", o:["Dorothea Orem","Hildegard Peplau","Jean Watson","Martha Rogers"], a:0,
+   w:"Dorothea Orem desarrolló el modelo del autocuidado.",
+   e:["","Peplau es relaciones interpersonales.","Watson es el cuidado humano.","Rogers es el ser humano unitario."]},
+  {c:"teo2", d:"tem", q:"El modelo de ADAPTACIÓN (4 modos) es de:", o:["Betty Neuman","Callista Roy","Imogene King","Faye Abdellah"], a:1,
+   w:"Callista Roy: la persona como sistema adaptativo, con 4 modos (fisiológico, autoconcepto, rol e interdependencia).",
+   e:["Neuman es el modelo de sistemas.","","King es la consecución de objetivos.","Abdellah es de la escuela de las necesidades."]},
+  {c:"teo2", d:"tem", q:"Las relaciones interpersonales (orientación, identificación, profundización, resolución) son de:", o:["Hildegard Peplau","Madeleine Leininger","Myra Levine","Moyra Allen"], a:0,
+   w:"Hildegard Peplau describió las fases de la relación interpersonal enfermera-paciente.",
+   e:["","Leininger es el cuidado transcultural.","Levine es el modelo de conservación.","Allen es la promoción de la salud en la familia."]},
+  {c:"teo2", d:"tem", q:"¿Cuál es la diferencia entre PAE y PLACE?", o:["Son lo mismo","PAE es el método; PLACE es el plan donde se documenta","PLACE es el método; PAE el documento","Ambos son diagnósticos"], a:1,
+   w:"El PAE es el método de 5 etapas; el PLACE es el Plan de Cuidados donde se documentan objetivos e intervenciones.",
+   e:["No son lo mismo.","","Es al revés.","Ninguno es un diagnóstico; el dx es una etapa del PAE."]},
+
+  // ---- Legislación (ampliación) ----
+  {c:"leg", d:"tem", q:"El conjunto de principios éticos que regulan una profesión se llama:", o:["Bioética","Deontología profesional","Jurisprudencia","Protocolo"], a:1,
+   w:"La deontología profesional son los deberes mínimos exigibles, recogidos en los códigos deontológicos.",
+   e:["La bioética es más amplia (conflictos de la vida).","","La jurisprudencia son criterios de los tribunales.","El protocolo es un procedimiento, no principios éticos."]},
+  {c:"leg", d:"tem", q:"Guardar las confidencias del paciente conocidas en el ejercicio profesional es:", o:["Consentimiento informado","Secreto profesional","Expediente clínico","Garantía individual"], a:1,
+   w:"El secreto profesional es la obligación moral de no revelar lo conocido durante la atención.",
+   e:["El consentimiento es informar para decidir.","","El expediente es el registro de datos.","Una garantía individual es un derecho constitucional."]},
+  {c:"leg", d:"tem", q:"Las garantías individuales se protegen principalmente mediante:", o:["El juicio de amparo","La CONAMED","El código penal","El consentimiento"], a:0,
+   w:"El juicio de amparo protege los derechos fundamentales frente a abusos de autoridad.",
+   e:["","La CONAMED resuelve conflictos médico-paciente.","El código penal sanciona delitos.","El consentimiento es para procedimientos clínicos."]},
+  {c:"leg", d:"tem", q:"El artículo 5º constitucional trata sobre:", o:["Educación","Protección de la salud","Libertad de profesión y trabajo","Derecho a la vivienda"], a:2,
+   w:"El art. 5º protege la libertad de dedicarse a un trabajo o profesión lícitos; la ley fija qué profesiones requieren título.",
+   e:["La educación es el art. 3º.","La salud es el art. 4º.","","No corresponde al art. 5º."]},
+  {c:"leg", d:"tem", q:"El encarnizamiento terapéutico (prolongar la vida a toda costa) se llama:", o:["Eutanasia","Distanasia","Ortotanasia","Bioética"], a:1,
+   w:"La distanasia es el ensañamiento terapéutico, posponer la muerte con cualquier medio artificial.",
+   e:["La eutanasia provoca la muerte para evitar sufrimiento.","","La ortotanasia es dejar morir sin medios extraordinarios.","La bioética es la disciplina, no esta práctica."]},
+  {c:"leg", d:"tem", q:"El principio bioético de respetar las decisiones de la persona es:", o:["Autonomía","Beneficencia","No maleficencia","Justicia"], a:0,
+   w:"La autonomía es la capacidad de la persona de decidir sobre sí misma; debe respetarse.",
+   e:["","La beneficencia es hacer el bien.","La no maleficencia es no dañar.","La justicia es la equidad."]},
+  {c:"leg", d:"tem", q:"Un cadáver no reclamado se considera de persona desconocida después de:", o:["24 horas","48 horas","72 horas","una semana"], a:2,
+   w:"A las 72 h sin reclamar (o sin identidad) se considera de persona desconocida.",
+   e:["Es más tiempo.","48 h es el plazo para inhumar/incinerar, no para 'desconocido'.","","No es el plazo establecido."]},
+  {c:"leg", d:"tem", q:"El principio de justicia en bioética se refiere a:", o:["Hacer el bien","Equidad en cargas y beneficios","No causar daño","Respetar la autonomía"], a:1,
+   w:"La justicia es la distribución equitativa de cargas y beneficios, sin discriminación.",
+   e:["Eso es beneficencia.","","Eso es no maleficencia.","Eso es autonomía."]},
+
+  // ---- Gerencia (ampliación) ----
+  {c:"ger", d:"tem", q:"En el FODA, las Oportunidades y Amenazas son factores:", o:["Internos","Externos","Económicos","Operativos"], a:1,
+   w:"Oportunidades y Amenazas son EXTERNOS; Fortalezas y Debilidades son internos.",
+   e:["Lo interno son Fortalezas y Debilidades.","","No se clasifican así.","Tampoco."]},
+  {c:"ger", d:"tem", q:"La etapa del proceso administrativo que define objetivos y estrategias es:", o:["Planeación","Organización","Dirección","Control"], a:0,
+   w:"La planeación responde '¿qué se va a hacer?': fija objetivos, estrategias y políticas.",
+   e:["","La organización distribuye tareas y recursos.","La dirección ejecuta.","El control mide resultados."]},
+  {c:"ger", d:"tem", q:"La identificación correcta del paciente (AESP 1) usa estos 3 datos:", o:["Nombre, cama y diagnóstico","Nombre completo, expediente y fecha de nacimiento","Edad, sexo y cama","Nombre, edad y aseguradora"], a:1,
+   w:"Se identifica con nombre completo, número de expediente clínico y fecha de nacimiento.",
+   e:["La cama y el dx no identifican de forma confiable.","","No son los datos oficiales.","Tampoco."]},
+  {c:"ger", d:"tem", q:"El 'time-out' (tiempo fuera) antes de un procedimiento pertenece a la AESP de:", o:["Comunicación efectiva","Seguridad en los procedimientos","Reducción de caídas","Higiene de manos"], a:1,
+   w:"El time-out (verificar sitio, procedimiento y paciente) es parte de la seguridad en los procedimientos.",
+   e:["La comunicación efectiva es otra meta.","","Las caídas son otra AESP.","La higiene de manos reduce infecciones."]},
+  {c:"ger", d:"tem", q:"Garantizar que una unidad cumple requisitos de seguridad, calidad y capacidad instalada es:", o:["Certificación","Acreditación","Supervisión","Auditoría"], a:1,
+   w:"La acreditación garantiza que la unidad cumple esos requisitos para brindar los servicios.",
+   e:["La certificación reconoce el cumplimiento de estándares de calidad.","","La supervisión es vigilancia operativa.","La auditoría revisa procesos."]},
+  {c:"ger", d:"tem", q:"El diagrama que ordena los problemas de mayor a menor frecuencia es:", o:["Organigrama","Árbol de decisiones","Diagrama de Pareto","Diagrama de Gantt"], a:2,
+   w:"El diagrama de Pareto clasifica de mayor a menor ('pocos vitales, muchos triviales') para priorizar.",
+   e:["El organigrama muestra la jerarquía.","El árbol de decisiones evalúa alternativas.","","El Gantt muestra tiempos/cronograma."]},
+  {c:"ger", d:"tem", q:"La representación gráfica de la estructura jerárquica de una organización es:", o:["El organigrama","El FODA","El Pareto","La misión"], a:0,
+   w:"El organigrama grafica los cargos y su jerarquía.",
+   e:["","El FODA analiza fortalezas/debilidades.","El Pareto prioriza problemas.","La misión es la razón de ser."]},
+  {c:"ger", d:"tem", q:"La etapa donde se ejerce liderazgo, motivación y comunicación es:", o:["Planeación","Organización","Dirección","Control"], a:2,
+   w:"La dirección ejecuta los planes a través del liderazgo, la motivación y la comunicación.",
+   e:["La planeación define el qué.","La organización ordena recursos.","","El control evalúa."]},
+
+  // ---- Investigación (ampliación) ----
+  {c:"inv2", d:"tem", q:"La PRIMERA etapa del método científico es:", o:["Formular la hipótesis","Definir el problema","Analizar los datos","Sacar conclusiones"], a:1,
+   w:"Todo parte de definir y plantear el problema (una pregunta sin respuesta).",
+   e:["La hipótesis viene después del problema.","","El análisis es posterior.","Las conclusiones son al final."]},
+  {c:"inv2", d:"tem", q:"La variable DEPENDIENTE es:", o:["La que se manipula","La que cambia según la independiente","La que se mantiene constante","La que no se mide"], a:1,
+   w:"La dependiente (VD) es la característica que se modifica/mide en función de la independiente.",
+   e:["Esa es la independiente.","","Esa sería una variable de control.","Sí se mide: es el resultado."]},
+  {c:"inv2", d:"tem", q:"El razonamiento lógico para conocer enfermedades en poblaciones es el método:", o:["Clínico","Epidemiológico","Empírico","Dialéctico"], a:1,
+   w:"El método epidemiológico estudia las características de las enfermedades en las colectividades.",
+   e:["El clínico estudia al individuo.","","El empírico se basa en la experiencia directa.","El dialéctico es filosófico."]},
+  {c:"inv2", d:"tem", q:"Para ser útil, un instrumento de investigación debe tener:", o:["Validez y confiabilidad","Tamaño y color","Solo validez","Aprobación legal"], a:0,
+   w:"Validez (mide lo que dice medir) y confiabilidad (resultados consistentes).",
+   e:["","No son criterios metodológicos.","También necesita confiabilidad.","No es el criterio metodológico."]},
+  {c:"inv2", d:"tem", q:"Un objetivo de investigación se redacta con:", o:["Preguntas","Verbos en infinitivo evaluables","Hipótesis negativas","Adjetivos"], a:1,
+   w:"Con verbos en infinitivo que puedan evaluarse; responde qué, en quién, dónde y cuándo.",
+   e:["La pregunta es el problema, no el objetivo.","","La hipótesis es afirmativa y es otra cosa.","No se redacta con adjetivos."]},
+  {c:"inv2", d:"tem", q:"La investigación CUANTITATIVA se caracteriza por:", o:["Comprender significados","Medir con números y estadística","Tener varios interrogantes abiertos","No usar hipótesis"], a:1,
+   w:"La cuantitativa mide numéricamente, usa hipótesis y variables, y aplica estadística.",
+   e:["Comprender significados es cualitativo.","","Los interrogantes múltiples son de la cualitativa.","Sí parte de hipótesis."]},
+  {c:"inv2", d:"tem", q:"La teoría del conocimiento también se conoce como:", o:["Epistemología","Metodología","Estadística","Semiología"], a:0,
+   w:"La epistemología es la teoría del conocimiento (estudio crítico de las ciencias).",
+   e:["","La metodología son los métodos para investigar.","La estadística analiza datos.","La semiología estudia los signos."]},
+  {c:"inv2", d:"tem", q:"Una hipótesis expresa la relación probable entre:", o:["Dos métodos","Dos variables","Dos objetivos","Dos poblaciones"], a:1,
+   w:"La hipótesis plantea la relación probable entre dos variables; se acepta o rechaza estadísticamente.",
+   e:["No es entre métodos.","","No es entre objetivos.","No es entre poblaciones."]},
+
+  // ---- Teorías (ampliación) ----
+  {c:"teo2", d:"tem", q:"Las 14 necesidades básicas corresponden al modelo de:", o:["Florence Nightingale","Virginia Henderson","Callista Roy","Jean Watson"], a:1,
+   w:"Virginia Henderson definió la enfermería por las 14 necesidades básicas.",
+   e:["Nightingale es la teoría del entorno.","","Roy es la adaptación.","Watson es el cuidado humano."]},
+  {c:"teo2", d:"tem", q:"El cuidado transcultural (según la cultura de la persona) es de:", o:["Jean Watson","Madeleine Leininger","Hildegard Peplau","Dorothea Orem"], a:1,
+   w:"Madeleine Leininger: la escuela del cuidado (caring) culturalmente congruente.",
+   e:["Watson es el cuidado humano transpersonal.","","Peplau es relaciones interpersonales.","Orem es el autocuidado."]},
+  {c:"teo2", d:"tem", q:"El cuidado humano transpersonal es la teoría de:", o:["Jean Watson","Callista Roy","Imogene King","Martha Rogers"], a:0,
+   w:"Jean Watson: el cuidado humano transpersonal como esencia de la enfermería.",
+   e:["","Roy es la adaptación.","King es la consecución de objetivos.","Rogers es el ser humano unitario."]},
+  {c:"teo2", d:"tem", q:"La PRIMERA etapa del proceso de atención de enfermería (PAE) es:", o:["Diagnóstico","Valoración","Planeación","Evaluación"], a:1,
+   w:"El PAE inicia con la valoración (recolección y organización de datos).",
+   e:["El diagnóstico va después.","","La planeación es la tercera.","La evaluación es la última."]},
+  {c:"teo2", d:"tem", q:"La teoría de la consecución de objetivos (sistema interpersonal) es de:", o:["Imogene King","Betty Neuman","Myra Levine","Moyra Allen"], a:0,
+   w:"Imogene King: modelo de sistemas con la teoría de la consecución de objetivos.",
+   e:["","Neuman es el modelo de sistemas (estrés).","Levine es la conservación.","Allen es la promoción de la salud familiar."]},
+  {c:"teo2", d:"tem", q:"La promoción de la salud en la familia es la escuela de:", o:["Moyra Allen","Florence Nightingale","Hildegard Peplau","Callista Roy"], a:0,
+   w:"Moyra Allen: escuela de la promoción de la salud en la familia.",
+   e:["","Nightingale es el entorno.","Peplau es relaciones interpersonales.","Roy es la adaptación."]},
+  {c:"teo2", d:"tem", q:"El 'paradigma de la transformación' y los campos de energía son de la escuela:", o:["De las necesidades","Del ser humano unitario","De la integración","Del cuidado"], a:1,
+   w:"La escuela del ser humano unitario (Rogers, Newman, Parse): la persona como campo de energía.",
+   e:["Las necesidades son Henderson/Orem.","","La integración es Peplau/King.","El cuidado es Leininger/Watson."]},
+  {c:"teo2", d:"tem", q:"El PAE es 'humanista' porque:", o:["Usa tecnología","Considera a la persona como un ser holístico","Es rápido","Solo lo aplica el médico"], a:1,
+   w:"Es humanista al ver al ser humano como un todo integrado (más que la suma de sus partes).",
+   e:["La tecnología no lo hace humanista.","","La rapidez no es lo humanista.","Lo aplica enfermería, no solo el médico."]},
+];
+QUIZ.forEach((q,i)=>{ q.id = "q"+i; if(!q.d) q.d = "epac"; });
+
+async function init(){
+  const raw = await store.get(KEY);
+  if (raw){ try { progress = JSON.parse(raw); } catch(e){ progress = {}; } }
+  const qraw = await store.get(QKEY);
+  if (qraw){ try { quizProgress = JSON.parse(qraw); } catch(e){ quizProgress = {}; } }
+  const traw = await store.get(TKEY);
+  if (traw !== null && traw !== undefined) timedMode = (traw === "1" || traw === true);
+  const sraw = await store.get(STARSKEY);
+  if (sraw){ const n = parseInt(sraw,10); if(!isNaN(n)) stars = n; }
+  const graw = await store.get(GSKEY);
+  if (graw){ try { gameScores = JSON.parse(graw); } catch(e){ gameScores = {}; } }
+  refreshTimerToggle();
+  buildCats();
+  renderHome();
+  attachEvents();
+}
+async function persist(){ await store.set(KEY, JSON.stringify(progress)); }
+async function persistQuiz(){ await store.set(QKEY, JSON.stringify(quizProgress)); }
+let quizProgress = {};   // id -> {r:correctas, w:falladas, lw:última fue fallada}
+
+/* Estrellas (premios) y récords de juegos */
+const STARSKEY = "epac_stars_v1";
+const GSKEY = "epac_gamescores_v1";
+let stars = 0;
+let gameScores = {};     // gameId -> mejor puntaje
+async function persistStars(){ await store.set(STARSKEY, String(stars)); }
+async function persistGameScores(){ await store.set(GSKEY, JSON.stringify(gameScores)); }
+
+/* ============================================================
+   ESTADÍSTICAS
+   ============================================================ */
+function statsFor(pool){
+  let master=0, prog=0, neu=0;
+  pool.forEach(c=>{
+    const p = progress[c.id];
+    if (!p || !p.seen) neu++;
+    else if (p.box>=4) master++;
+    else prog++;
+  });
+  return {master, prog, neu, total:pool.length};
+}
+function isDue(c){
+  const p = progress[c.id];
+  if (!p || !p.seen) return true;       // nuevas siempre disponibles
+  return Date.now() >= (p.due||0);
+}
+
+/* ============================================================
+   PANTALLA DE INICIO
+   ============================================================ */
+function renderHome(){
+  const pool = dCards();
+  // encabezado y pestañas según la sección activa
+  document.getElementById("homeTitle").textContent = (deck==="tem") ? "Temario resuelto" : "Tus tarjetas de estudio";
+  document.getElementById("homeSub").textContent = (deck==="tem")
+    ? "Legislación, gerencia, investigación y teorías. Una pregunta a la vez, en sesiones cortas."
+    : "Una pregunta a la vez. Las que falles vuelven más seguido, las que domines se espacian. Hecho para sesiones cortas.";
+  document.querySelectorAll(".deck-pill").forEach(p=> p.classList.toggle("active", p.dataset.deck===deck));
+  const hs = document.getElementById("homeStars");
+  if (hs) hs.textContent = "★ " + stars;
+  const s = statsFor(pool);
+  document.getElementById("masterCount").textContent = s.master;
+  document.getElementById("totalCount").textContent = s.total;
+  document.getElementById("lgMaster").textContent = s.master;
+  document.getElementById("lgProg").textContent = s.prog;
+  document.getElementById("lgNew").textContent = s.neu;
+  document.getElementById("segMaster").style.width = (s.master/s.total*100)+"%";
+  document.getElementById("segProg").style.width = (s.prog/s.total*100)+"%";
+
+  // CTA principal según lo que toca hoy
+  const due = pool.filter(isDue).length;
+  const sub = document.getElementById("startMainSub");
+  if (s.master === s.total){
+    document.getElementById("startMainText").textContent = "Repasar todo";
+    sub.textContent = "¡Ya dominas todas! Repaso de mantenimiento";
+  } else if (due > 0){
+    sub.textContent = due + " tarjetas listas para hoy · sesión de 10";
+  } else {
+    sub.textContent = "10 tarjetas mezcladas";
+  }
+
+  const hardN = dCards().filter(c => progress[c.id] && progress[c.id].box<=2 && progress[c.id].seen).length;
+  const hardBtn = document.getElementById("startHard");
+  document.getElementById("hardSub").textContent = hardN ? (hardN + " por reforzar") : "aún no hay";
+  hardBtn.disabled = hardN === 0;
+
+  // Examen: preguntas falladas
+  const failedN = dQuiz().filter(q => quizProgress[q.id] && quizProgress[q.id].lw).length;
+  const qfBtn = document.getElementById("quizFailed");
+  document.getElementById("quizFailedSub").textContent = failedN ? (failedN + " por corregir") : "aún no hay";
+  qfBtn.disabled = failedN === 0;
+}
+
+function buildCats(){
+  const list = document.getElementById("catList");
+  list.innerHTML = "";
+  Object.keys(CATS).forEach(key=>{
+    const pool = dCards().filter(c=>c.c===key);
+    if (!pool.length) return;
+    const s = statsFor(pool);
+    const pct = Math.round(s.master/s.total*100);
+    const btn = document.createElement("button");
+    btn.className = "cat";
+    btn.innerHTML =
+      '<span class="cat-bar" style="background:'+CATS[key].color+'"></span>'+
+      '<span class="cat-name">'+CATS[key].name+'</span>'+
+      '<span class="cat-mini"><span style="width:'+pct+'%;background:'+CATS[key].color+'"></span></span>'+
+      '<span class="cat-meta">'+s.master+'/'+s.total+'</span>';
+    btn.onclick = ()=> startSession({category:key, size: pool.length});
+    list.appendChild(btn);
+  });
+}
+
+/* ============================================================
+   SESIÓN DE ESTUDIO
+   ============================================================ */
+let queue = [], qIndex = 0, flipped = false, tally = {know:0, mid:0, dont:0};
+
+function startSession(opts){
+  const {category=null, size=10, hardOnly=false} = opts || {};
+  let pool = category ? dCards().filter(c=>c.c===category) : dCards();
+
+  if (hardOnly){
+    pool = pool.filter(c => progress[c.id] && progress[c.id].seen && progress[c.id].box<=2);
+  }
+
+  // prioridad: difíciles vencidas > vencidas > nuevas > resto
+  const score = c=>{
+    const p = progress[c.id];
+    if (!p || !p.seen) return 2;            // nueva
+    if (Date.now() >= (p.due||0)) return p.box<=2 ? 0 : 1; // vencida
+    return 3 + (p.box||0);                  // adelantada
+  };
+  pool.sort((a,b)=> score(a)-score(b));
+
+  // si nada está "listo", de todos modos tomamos las más próximas
+  queue = pool.slice(0, hardOnly ? pool.length : size);
+  shuffle(queue);
+
+  if (!queue.length){ return; }
+
+  qIndex = 0; flipped = false; tally = {know:0, mid:0, dont:0};
+  showView("study");
+  renderCard();
+}
+
+function renderCard(){
+  const card = queue[qIndex];
+  const cat = CATS[card.c];
+  flipped = false;
+
+  const fc = document.getElementById("card");
+  fc.classList.remove("flipped");
+  fc.style.setProperty("--cat-color", cat.color);
+
+  document.getElementById("frontChip").textContent = cat.name;
+  document.getElementById("backChip").textContent = cat.name;
+  document.getElementById("qText").textContent = card.q;
+  document.getElementById("aText").textContent = card.a;
+
+  // progreso de la sesión
+  document.getElementById("sessCount").textContent = (qIndex) + "/" + queue.length;
+  document.getElementById("sessFill").style.width = (qIndex/queue.length*100)+"%";
+
+  // controles -> botón "ver respuesta"
+  const ctl = document.getElementById("controls");
+  ctl.innerHTML = '<button class="flip-cta" id="flipBtn">Ver respuesta</button>';
+  document.getElementById("flipBtn").onclick = doFlip;
+}
+
+function doFlip(){
+  if (flipped) return;
+  flipped = true;
+  document.getElementById("card").classList.add("flipped");
+  const ctl = document.getElementById("controls");
+  ctl.innerHTML =
+    '<div class="rate-row">'+
+      '<button class="rate dont" data-r="dont">No la sé<small>repasar pronto</small></button>'+
+      '<button class="rate mid" data-r="mid">Más o menos<small>casi</small></button>'+
+      '<button class="rate know" data-r="know">¡La sé!<small>dominada</small></button>'+
+    '</div>';
+  ctl.querySelectorAll(".rate").forEach(b=> b.onclick = ()=> rate(b.dataset.r));
+}
+
+function rate(r){
+  const card = queue[qIndex];
+  const p = progress[card.id] || {box:1, due:0, seen:false};
+  tally[r]++;
+
+  if (r==="dont"){
+    p.box = 1; p.due = Date.now(); p.seen = true;
+    queue.push(card);                 // vuelve a aparecer en esta sesión
+  } else if (r==="mid"){
+    p.box = Math.max(1, p.box);
+    p.due = Date.now() + 1*DAY;
+    p.seen = true;
+  } else { // know
+    p.box = Math.min(5, (p.box||1) + 1);
+    p.due = Date.now() + INTERVALS[p.box]*DAY;
+    p.seen = true;
+  }
+  progress[card.id] = p;
+  persist();
+
+  qIndex++;
+  if (qIndex >= queue.length){ finishSession(); }
+  else { renderCard(); }
+}
+
+function finishSession(){
+  document.getElementById("sessCount").textContent = queue.length + "/" + queue.length;
+  document.getElementById("sessFill").style.width = "100%";
+  document.getElementById("dKnow").textContent = tally.know;
+  document.getElementById("dMid").textContent = tally.mid;
+  document.getElementById("dDont").textContent = tally.dont;
+
+  const total = tally.know + tally.mid + tally.dont;
+  const msg = document.getElementById("doneMsg");
+  if (tally.dont === 0 && tally.mid === 0){
+    msg.textContent = "Las dominaste todas. Vas con muy buen ritmo.";
+  } else if (tally.know >= total/2){
+    msg.textContent = "Buen avance. Las que marcaste para repasar volverán antes para reforzarlas.";
+  } else {
+    msg.textContent = "Esto es exactamente lo que hace que se queden: ya las identificaste y volverán pronto.";
+  }
+  showView("done");
+}
+
+/* ============================================================
+   MODO EXAMEN (opción múltiple)
+   ============================================================ */
+let qz = [], qzIndex = 0, qzAnswered = false, qzRight = 0, qzWrongList = [], qzIsRetry = false;
+const LETTERS = ["A","B","C","D","E"];
+
+/* Cronómetro del examen */
+const QUIZ_SECONDS = 60;
+const TKEY = "epac_timed_v1";
+let timedMode = true;
+let qTimer = null, qTimeLeft = 0;
+
+function fmtTime(s){ const m = Math.floor(s/60), ss = s%60; return m + ":" + (ss<10?"0":"") + ss; }
+function refreshTimerToggle(){
+  const t = document.getElementById("timerToggle");
+  if (t) t.setAttribute("aria-checked", timedMode ? "true" : "false");
+}
+function stopTimer(){ if (qTimer){ clearInterval(qTimer); qTimer = null; } }
+function startTimer(){
+  stopTimer();
+  const el = document.getElementById("quizTimer");
+  if (!timedMode){ el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+  qTimeLeft = QUIZ_SECONDS;
+  el.classList.remove("warn");
+  el.textContent = fmtTime(qTimeLeft);
+  qTimer = setInterval(()=>{
+    qTimeLeft--;
+    el.textContent = fmtTime(Math.max(0,qTimeLeft));
+    if (qTimeLeft <= 10) el.classList.add("warn");
+    if (qTimeLeft <= 0){ stopTimer(); timeUp(); }
+  }, 1000);
+}
+function timeUp(){
+  if (qzAnswered) return;
+  qzAnswered = true;
+  const q = qz[qzIndex];
+  const correct = q.a;
+  document.querySelectorAll("#quizOpts .opt").forEach((b, idx)=>{
+    b.disabled = true;
+    const mark = b.querySelector(".opt-mark svg");
+    if (idx === correct){ b.classList.add("is-correct"); mark.innerHTML = '<path d="M20 6L9 17l-5-5"/>'; }
+    else { b.classList.add("is-dim"); }
+  });
+  const p = quizProgress[q.id] || {r:0, w:0, lw:false};
+  p.w++; p.lw = true; quizProgress[q.id] = p; persistQuiz();
+  qzWrongList.push(q);
+
+  const fb = document.getElementById("quizFeedback");
+  fb.innerHTML =
+    '<div class="fb-card no">'+
+      '<div class="fb-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Se acabó el tiempo</div>'+
+      '<div class="fb-line">En el examen real tendrás el reloj encima, así que cuenta como fallada.</div>'+
+      '<div class="fb-line fb-correct">Correcta: «'+q.o[correct]+'»</div>'+
+      '<div class="fb-line">'+q.w+'</div>'+
+    '</div>';
+  fb.classList.add("show");
+
+  const last = (qzIndex >= qz.length - 1);
+  const ctl = document.getElementById("quizControls");
+  ctl.innerHTML = '<button class="quiz-next" id="qzNext">'+(last ? "Ver resultado" : "Siguiente pregunta")+'</button>';
+  document.getElementById("qzNext").onclick = nextQuestion;
+}
+
+function startQuiz(opts){
+  const {size=10, failedOnly=false, retry=false} = opts || {};
+  qzIsRetry = retry || failedOnly;
+  let pool;
+  if (failedOnly){
+    pool = dQuiz().filter(q => quizProgress[q.id] && quizProgress[q.id].lw);
+  } else {
+    pool = dQuiz();
+  }
+  shuffle(pool);
+  qz = failedOnly ? pool : pool.slice(0, Math.min(size, pool.length));
+  if (!qz.length) return;
+  qzIndex = 0; qzRight = 0; qzAnswered = false; qzWrongList = [];
+  showView("quiz");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = qz[qzIndex];
+  const cat = CATS[q.c];
+  qzAnswered = false;
+
+  const chip = document.getElementById("quizChip");
+  chip.textContent = cat.name;
+  chip.style.background = "color-mix(in srgb, "+cat.color+" 14%, white)";
+  chip.style.color = cat.color;
+
+  document.getElementById("quizQ").textContent = q.q;
+  document.getElementById("quizScore").textContent = "✓ " + qzRight;
+  document.getElementById("quizCount").textContent = qzIndex + "/" + qz.length;
+  document.getElementById("quizFill").style.width = (qzIndex/qz.length*100) + "%";
+
+  const fb = document.getElementById("quizFeedback");
+  fb.className = "quiz-feedback"; fb.innerHTML = "";
+
+  const wrap = document.getElementById("quizOpts");
+  wrap.innerHTML = "";
+  q.o.forEach((text, i)=>{
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.dataset.i = i;
+    b.innerHTML =
+      '<span class="opt-key">'+LETTERS[i]+'</span>'+
+      '<span class="opt-text">'+text+'</span>'+
+      '<span class="opt-mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></svg></span>';
+    b.onclick = ()=> chooseOption(i);
+    wrap.appendChild(b);
+  });
+
+  document.getElementById("quizControls").innerHTML = "";
+  window.scrollTo(0,0);
+  startTimer();
+}
+
+function chooseOption(i){
+  if (qzAnswered) return;
+  qzAnswered = true;
+  stopTimer();
+  const q = qz[qzIndex];
+  const correct = q.a;
+  const isRight = (i === correct);
+  const buttons = document.querySelectorAll("#quizOpts .opt");
+
+  buttons.forEach((b, idx)=>{
+    b.disabled = true;
+    const mark = b.querySelector(".opt-mark svg");
+    if (idx === correct){
+      b.classList.add("is-correct");
+      mark.innerHTML = '<path d="M20 6L9 17l-5-5"/>';
+    } else if (idx === i){
+      b.classList.add("is-wrong");
+      mark.innerHTML = '<path d="M18 6L6 18"/><path d="M6 6l12 12"/>';
+    } else {
+      b.classList.add("is-dim");
+    }
+  });
+
+  // registrar avance
+  const p = quizProgress[q.id] || {r:0, w:0, lw:false};
+  if (isRight){ p.r++; p.lw = false; qzRight++; }
+  else { p.w++; p.lw = true; qzWrongList.push(q); }
+  quizProgress[q.id] = p;
+  persistQuiz();
+  document.getElementById("quizScore").textContent = "✓ " + qzRight;
+
+  // retroalimentación
+  const fb = document.getElementById("quizFeedback");
+  const correctText = q.o[correct];
+  let html = "";
+  if (isRight){
+    html =
+      '<div class="fb-card ok">'+
+        '<div class="fb-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>¡Correcto!</div>'+
+        '<div class="fb-line">'+q.w+'</div>'+
+      '</div>';
+  } else {
+    const why = (q.e && q.e[i]) ? q.e[i] : "Esa opción no es la correcta.";
+    html =
+      '<div class="fb-card no">'+
+        '<div class="fb-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>Incorrecto</div>'+
+        '<div class="fb-line">Elegiste <b>«'+q.o[i]+'»</b>. '+why+'</div>'+
+        '<div class="fb-line fb-correct">Correcta: «'+correctText+'»</div>'+
+        '<div class="fb-line">'+q.w+'</div>'+
+      '</div>';
+  }
+  fb.innerHTML = html;
+  fb.classList.add("show");
+
+  const last = (qzIndex >= qz.length - 1);
+  const ctl = document.getElementById("quizControls");
+  ctl.innerHTML = '<button class="quiz-next" id="qzNext">'+(last ? "Ver resultado" : "Siguiente pregunta")+'</button>';
+  document.getElementById("qzNext").onclick = nextQuestion;
+}
+
+function nextQuestion(){
+  qzIndex++;
+  if (qzIndex >= qz.length){ finishQuiz(); }
+  else { renderQuestion(); }
+}
+
+function finishQuiz(){
+  stopTimer();
+  const total = qz.length;
+  const wrong = total - qzRight;
+  const pct = Math.round(qzRight/total*100);
+  document.getElementById("qdRight").textContent = qzRight;
+  document.getElementById("qdWrong").textContent = wrong;
+  document.getElementById("qdPct").textContent = pct + "%";
+
+  // Premio: estrellas por buen desempeño
+  let earned = qzRight;            // 1 por cada acierto
+  if (pct >= 70) earned += 3;      // bono por aprobar
+  if (wrong === 0) earned += 5;    // bono por examen perfecto
+  stars += earned; persistStars();
+  document.getElementById("qdStars").innerHTML =
+    '<span class="stars-chip" style="font-size:1rem">★ +'+earned+'</span> ' +
+    '<span style="color:var(--ink-soft);font-size:.86rem">Total: '+stars+' estrellas</span>';
+
+  const msg = document.getElementById("qdMsg");
+  const title = document.getElementById("qdTitle");
+  if (wrong === 0){
+    title.textContent = "¡Examen perfecto!";
+    msg.textContent = "Todas correctas. Vas muy bien para tu titulación.";
+  } else if (pct >= 70){
+    title.textContent = "Buen resultado";
+    msg.textContent = "Vas bien. Repasa las que fallaste y quedarán fijas.";
+  } else {
+    title.textContent = "A seguir practicando";
+    msg.textContent = "Lo importante: ya sabes cuáles reforzar. Vuelve a intentarlas.";
+  }
+
+  // lista de repaso de las falladas
+  const rev = document.getElementById("qdReview");
+  rev.innerHTML = "";
+  qzWrongList.forEach(q=>{
+    const d = document.createElement("div");
+    d.className = "qd-item";
+    d.innerHTML = '<div class="qd-q">'+q.q+'</div><div class="qd-a">✓ '+q.o[q.a]+'</div>';
+    rev.appendChild(d);
+  });
+
+  const retryBtn = document.getElementById("qdRetry");
+  if (wrong > 0){
+    retryBtn.style.display = "flex";
+    document.getElementById("qdRetrySub").textContent = wrong + (wrong===1 ? " pregunta" : " preguntas");
+  } else {
+    retryBtn.style.display = "none";
+  }
+
+  showView("quizdone");
+}
+
+function setDeck(name){
+  if (!DECKS[name] || name===deck) return;
+  deck = name;
+  buildCats();
+  renderHome();
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   JUEGOS (PREMIOS)
+   ============================================================ */
+const GAMES = [
+  {id:"color",  name:"Color diferente",   emoji:"🎨", bg:"#E2F1EF", cost:10,
+   desc:"Encuentra el cuadro de color distinto. La rejilla crece con cada acierto."},
+  {id:"simon",  name:"Secuencia",         emoji:"🧠", bg:"#EDEAF7", cost:25,
+   desc:"Memoriza y repite la secuencia de colores. Cada ronda suma uno más."},
+  {id:"calc",   name:"Cálculo veloz",     emoji:"➗", bg:"#F6ECD8", cost:45,
+   desc:"Resuelve la mayor cantidad de operaciones en 60 segundos."},
+  {id:"stroop", name:"Colores y palabras",emoji:"👁️", bg:"#E4F3EC", cost:70,
+   desc:"Elige el COLOR de la tinta, no lo que dice la palabra. 3 vidas."},
+];
+
+let gameTimers = [], currentGame = null;
+function gT(t){ gameTimers.push(t); return t; }
+function clearGameTimers(){ gameTimers.forEach(t=>{ clearTimeout(t); clearInterval(t); }); gameTimers = []; }
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function setGScore(v){ document.getElementById("gameScore").textContent = v; }
+function bestFor(id){ return gameScores[id] || 0; }
+function recordScore(id,v){ if (v > (gameScores[id]||0)){ gameScores[id]=v; persistGameScores(); return true; } return false; }
+
+function openGames(){
+  document.getElementById("gamesStars").textContent = "★ " + stars;
+  const next = GAMES.find(g => stars < g.cost);
+  document.getElementById("gamesIntro").textContent = next
+    ? ("Gana estrellas ★ contestando bien los exámenes. Te faltan " + (next.cost-stars) + " para desbloquear «" + next.name + "».")
+    : "¡Desbloqueaste todos los juegos! Úsalos para despejar la mente entre repasos.";
+  const list = document.getElementById("gamesList");
+  list.innerHTML = "";
+  GAMES.forEach(g=>{
+    const unlocked = stars >= g.cost;
+    const best = bestFor(g.id);
+    const card = document.createElement("div");
+    card.className = "game-card" + (unlocked ? "" : " locked");
+    card.innerHTML =
+      '<div class="gcd-icon" style="background:'+g.bg+'">'+g.emoji+'</div>'+
+      '<div class="gcd-body"><div class="gcd-name">'+g.name+'</div>'+
+        '<div class="gcd-desc">'+g.desc+(unlocked && best ? ' · Mejor: '+best : '')+'</div></div>'+
+      '<div class="gcd-state">'+(unlocked
+        ? '<span class="play">Jugar</span>'
+        : '<span class="lock">🔒<b>★ '+g.cost+'</b></span>')+'</div>';
+    if (unlocked) card.onclick = ()=> playGame(g.id);
+    list.appendChild(card);
+  });
+  showView("games");
+}
+
+function playGame(id){
+  clearGameTimers();
+  currentGame = id;
+  const g = GAMES.find(x=>x.id===id);
+  document.getElementById("gameTitle").textContent = g.name;
+  setGScore(0);
+  showView("gameview");
+  if (id==="color") initColor();
+  else if (id==="simon") initSimon();
+  else if (id==="calc") initCalc();
+  else if (id==="stroop") initStroop();
+}
+
+function showGameOver(id, score, label){
+  clearGameTimers();
+  const beat = recordScore(id, score);
+  setGScore(score);
+  document.getElementById("gameStage").innerHTML =
+    '<div class="game-big">'+(label||"Puntaje")+': '+score+'</div>'+
+    '<div class="game-msg">'+(beat ? "¡Nuevo récord! 🎉" : "Tu mejor marca: "+bestFor(id))+'</div>';
+  document.getElementById("gameFoot").innerHTML =
+    '<button class="game-btn" id="gAgain">Jugar de nuevo</button>'+
+    '<button class="game-btn ghost" id="gBackList">Volver a juegos</button>';
+  document.getElementById("gAgain").onclick = ()=> playGame(id);
+  document.getElementById("gBackList").onclick = ()=> openGames();
+}
+
+/* --- Juego 1: Color diferente --- */
+function initColor(){
+  let level = 1;
+  const stage = document.getElementById("gameStage");
+  document.getElementById("gameFoot").innerHTML = '<div class="game-msg">Toca el cuadro de color diferente.</div>';
+  function round(){
+    setGScore(level-1);
+    const n = Math.min(2 + Math.floor(level/2), 6);
+    const h = rnd(0,359), baseL = rnd(48,60);
+    const delta = Math.max(4, Math.round(24 - level*1.6));
+    const odd = rnd(0, n*n-1);
+    stage.innerHTML = "";
+    const grid = document.createElement("div");
+    grid.className = "swatch-grid";
+    grid.style.gridTemplateColumns = "repeat("+n+",1fr)";
+    for (let i=0;i<n*n;i++){
+      const b = document.createElement("button");
+      b.className = "swatch";
+      b.style.background = "hsl("+h+",62%,"+((i===odd)? baseL+delta : baseL)+"%)";
+      b.onclick = ()=>{ if(i===odd){ level++; round(); } else { showGameOver("color", level-1, "Nivel"); } };
+      grid.appendChild(b);
+    }
+    stage.appendChild(grid);
+  }
+  round();
+}
+
+/* --- Juego 2: Secuencia (tipo Simon) --- */
+function initSimon(){
+  const COLS = ["#E2483D","#2F7DD1","#3FA45B","#E8B43A"];
+  let seq = [], pos = 0, accepting = false, round = 0;
+  const stage = document.getElementById("gameStage");
+  const foot = document.getElementById("gameFoot");
+  stage.innerHTML = '<div class="color-pad" id="simonPad"></div>';
+  const pad = document.getElementById("simonPad");
+  const btns = COLS.map((c,idx)=>{
+    const b = document.createElement("button");
+    b.className = "pad-btn"; b.style.background = c;
+    b.onclick = ()=> press(idx);
+    pad.appendChild(b); return b;
+  });
+  function light(i){ btns[i].classList.add("lit"); gT(setTimeout(()=> btns[i].classList.remove("lit"), 350)); }
+  function playSeq(){
+    accepting = false; let k = 0;
+    const iv = gT(setInterval(()=>{
+      if (k >= seq.length){ clearInterval(iv); accepting = true; pos = 0;
+        foot.innerHTML = '<div class="game-msg">Tu turno: repite la secuencia.</div>'; return; }
+      light(seq[k]); k++;
+    }, 700));
+  }
+  function next(){
+    round++; setGScore(round); seq.push(rnd(0,3));
+    foot.innerHTML = '<div class="game-msg">Observa la secuencia…</div>';
+    gT(setTimeout(playSeq, 700));
+  }
+  function press(idx){
+    if (!accepting) return;
+    if (idx === seq[pos]){ light(idx); pos++; if (pos >= seq.length){ accepting=false; gT(setTimeout(next, 800)); } }
+    else { showGameOver("simon", round-1, "Ronda"); }
+  }
+  next();
+}
+
+/* --- Juego 3: Cálculo veloz --- */
+function makeOpts(ans){
+  const s = new Set([ans]);
+  while (s.size < 4){ let v = ans + rnd(1,9)*(Math.random()<.5?-1:1); if (v<0) v = ans + rnd(1,9); s.add(v); }
+  return shuffle([...s]);
+}
+function initCalc(){
+  let score = 0, timeLeft = 60, over = false;
+  const stage = document.getElementById("gameStage");
+  const foot = document.getElementById("gameFoot");
+  foot.innerHTML = '<div class="game-timebar"><span id="calcBar" style="width:100%"></span></div><div class="game-msg" id="calcMsg">⏱ 60 s</div>';
+  const bar = document.getElementById("calcBar");
+  const tick = gT(setInterval(()=>{
+    timeLeft--;
+    bar.style.width = (timeLeft/60*100)+"%";
+    const m = document.getElementById("calcMsg"); if (m) m.textContent = "⏱ "+timeLeft+" s";
+    if (timeLeft <= 0){ over = true; showGameOver("calc", score, "Aciertos"); }
+  }, 1000));
+  function newQ(){
+    if (over) return;
+    setGScore(score);
+    const ops = ["+","−","×"], op = ops[rnd(0,2)];
+    let a,b,ans;
+    if (op==="+"){ a=rnd(10,60); b=rnd(10,60); ans=a+b; }
+    else if (op==="−"){ a=rnd(20,90); b=rnd(1,a-1); ans=a-b; }
+    else { a=rnd(2,12); b=rnd(2,12); ans=a*b; }
+    stage.innerHTML = '<div class="game-big">'+a+" "+op+" "+b+'</div>';
+    const grid = document.createElement("div"); grid.className = "opt-grid";
+    makeOpts(ans).forEach(v=>{
+      const bt = document.createElement("button"); bt.className = "game-opt"; bt.textContent = v;
+      bt.onclick = ()=>{ if (over) return; if (v===ans){ score++; newQ(); } else { bt.classList.add("no"); } };
+      grid.appendChild(bt);
+    });
+    stage.appendChild(grid);
+  }
+  newQ();
+}
+
+/* --- Juego 4: Colores y palabras (Stroop) --- */
+function initStroop(){
+  const C = [
+    {n:"ROJO",c:"#E2483D"},{n:"AZUL",c:"#2F7DD1"},{n:"VERDE",c:"#3FA45B"},
+    {n:"AMARILLO",c:"#D9A327"},{n:"MORADO",c:"#8A5BB8"},{n:"NARANJA",c:"#E07B39"}
+  ];
+  let score = 0, lives = 3;
+  const stage = document.getElementById("gameStage");
+  const foot = document.getElementById("gameFoot");
+  function hearts(){ return "♥".repeat(lives) + "·".repeat(3-lives); }
+  function newQ(){
+    setGScore(score);
+    foot.innerHTML = '<div class="game-msg">Vidas: '+hearts()+'</div><div class="game-msg">Elige el COLOR de la tinta (no lo que dice).</div>';
+    const wordIdx = rnd(0, C.length-1);
+    const inkIdx = rnd(0, C.length-1);
+    const idxs = new Set([inkIdx]);
+    while (idxs.size < 4){ idxs.add(rnd(0, C.length-1)); }
+    stage.innerHTML = '<div class="stroop-word" style="color:'+C[inkIdx].c+'">'+C[wordIdx].n+'</div>';
+    const grid = document.createElement("div"); grid.className = "opt-grid";
+    shuffle([...idxs]).forEach(i=>{
+      const b = document.createElement("button"); b.className = "game-opt";
+      b.innerHTML = '<span style="display:inline-block;width:26px;height:26px;border-radius:7px;background:'+C[i].c+';vertical-align:middle"></span>';
+      b.onclick = ()=>{
+        if (i===inkIdx){ score++; newQ(); }
+        else { lives--; if (lives<=0){ showGameOver("stroop", score, "Aciertos"); } else { newQ(); } }
+      };
+      grid.appendChild(b);
+    });
+    stage.appendChild(grid);
+  }
+  newQ();
+}
+
+/* ============================================================
+   NAVEGACIÓN Y EVENTOS
+   ============================================================ */
+const VIEWS = ["home","study","done","quiz","quizdone","games","gameview"];
+function showView(v){
+  if (v !== "quiz") stopTimer();
+  if (v !== "gameview") clearGameTimers();
+  VIEWS.forEach(name=>{
+    const el = document.getElementById(name);
+    if (name === "home") {
+      el.classList.toggle("hidden", v!=="home");
+      el.style.display = v==="home" ? "block" : "none";
+    } else {
+      el.classList.toggle("active", v===name);
+      el.style.display = (v===name) ? "flex" : "none";
+    }
+  });
+  if (v==="home"){ buildCats(); renderHome(); }
+  window.scrollTo(0,0);
+}
+
+function attachEvents(){
+  document.getElementById("startMain").onclick = ()=> startSession({size:10});  document.getElementById("startLong").onclick = ()=> startSession({size:20});
+  document.getElementById("startHard").onclick = ()=> startSession({hardOnly:true});
+  document.getElementById("backBtn").onclick = ()=> showView("home");
+  document.getElementById("doneHome").onclick = ()=> showView("home");
+  document.getElementById("againBtn").onclick = ()=> startSession({size:10});
+
+  // Modo examen
+  document.getElementById("startQuiz").onclick = ()=> startQuiz({size:10});
+  document.getElementById("quizLong").onclick  = ()=> startQuiz({size:20});
+  document.getElementById("quizFailed").onclick= ()=> startQuiz({failedOnly:true});
+  document.getElementById("quizBack").onclick  = ()=> showView("home");
+  document.getElementById("qdHome").onclick    = ()=> showView("home");
+  document.getElementById("qdAgain").onclick   = ()=> startQuiz({size:10});
+  document.getElementById("qdRetry").onclick   = ()=> startQuiz({failedOnly:true, retry:true});
+
+  // Juegos y premios
+  document.getElementById("openGames").onclick = openGames;
+  document.getElementById("gamesBack").onclick = ()=> showView("home");
+  document.getElementById("gameBack").onclick = openGames;
+
+  // Selector de sección (mazo)
+  document.querySelectorAll(".deck-pill").forEach(p=>{
+    p.onclick = ()=> setDeck(p.dataset.deck);
+  });
+
+  // Interruptor de contrarreloj
+  document.getElementById("timerToggle").onclick = ()=>{
+    timedMode = !timedMode;
+    refreshTimerToggle();
+    store.set(TKEY, timedMode ? "1" : "0");
+  };
+  document.getElementById("card").onclick = doFlip;
+  document.getElementById("card").addEventListener("keydown", e=>{
+    if (e.key===" "||e.key==="Enter"){ e.preventDefault(); doFlip(); }
+  });
+
+  document.addEventListener("keydown", e=>{
+    if (document.getElementById("study").style.display !== "flex") return;
+    if (!flipped && (e.key===" "||e.key==="Enter")){ e.preventDefault(); doFlip(); }
+    else if (flipped){
+      if (e.key==="1") rate("dont");
+      else if (e.key==="2") rate("mid");
+      else if (e.key==="3") rate("know");
+    }
+    if (e.key==="Escape") showView("home");
+  });
+
+  // Teclado del modo examen
+  document.addEventListener("keydown", e=>{
+    if (document.getElementById("quiz").style.display !== "flex") return;
+    if (e.key==="Escape"){ showView("home"); return; }
+    if (!qzAnswered){
+      const n = ["1","2","3","4"].indexOf(e.key);
+      if (n>=0 && qz[qzIndex] && n < qz[qzIndex].o.length){ e.preventDefault(); chooseOption(n); }
+    } else if (e.key==="Enter"||e.key===" "){
+      e.preventDefault(); nextQuestion();
+    }
+  });
+
+  document.getElementById("resetBtn").onclick = ()=>{
+    if (confirm("¿Reiniciar todo tu avance? Esto borra qué tarjetas tienes dominadas o por repasar, y tu historial del examen.")){
+      progress = {}; persist();
+      quizProgress = {}; persistQuiz();
+      renderHome(); buildCats();
+    }
+  };
+}
+
+function shuffle(a){
+  for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", ()=> navigator.serviceWorker.register("./service-worker.js"));
+}
+
+init();
+</script>
+</body>
+</html>
