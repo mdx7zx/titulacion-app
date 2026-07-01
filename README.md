@@ -2,6 +2,8 @@
 
 App instalable de tarjetas de estudio para enfermería. Incluye sesiones de repaso, exámenes, progreso guardado en el dispositivo y minijuegos desbloqueables.
 
+Versión ampliada de Guía EPAC: ahora incluye más tarjetas de estudio y más preguntas tipo examen basadas en el PDF `Guía Epac.pdf`.
+
 ## App publicada
 
 https://mdx7zx.github.io/titulacion-app/
