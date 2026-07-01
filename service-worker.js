@@ -1,4 +1,4 @@
-const CACHE = "titulacion-v2";
+const CACHE = "titulacion-v3";
 const APP_FILES = [
   "./",
   "./index.html",
