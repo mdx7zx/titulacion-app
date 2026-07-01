@@ -4,6 +4,8 @@ App instalable de tarjetas de estudio para enfermería. Incluye sesiones de repa
 
 Versión completa de Guía EPAC: incluye tarjetas integrales por tema del PDF `Guía Epac.pdf`, más un bloque de alto rendimiento con preguntas tipo examen, casos clínicos y datos clave.
 
+La sección `Temario resuelto` integra contenido del PDF grande `GUIA EPAC. TEMARIO RESUELTO .pdf`, enfocado en Legislación, Gerencia, Investigación cualitativa/cuantitativa y Teóricas.
+
 ## App publicada
 
 https://mdx7zx.github.io/titulacion-app/
