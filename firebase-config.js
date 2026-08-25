@@ -12,10 +12,10 @@
    (ver FIREBASE.md) y la lista de dominios autorizados.
    ============================================================ */
 window.FIREBASE_CONFIG = {
-  apiKey:            "PEGA_AQUI_TU_API_KEY",
-  authDomain:        "PEGA_AQUI.firebaseapp.com",
-  projectId:         "PEGA_AQUI",
-  storageBucket:     "PEGA_AQUI.appspot.com",
-  messagingSenderId: "PEGA_AQUI",
-  appId:             "PEGA_AQUI"
+  apiKey:            "AIzaSyCfy6NMBEfQARC5Y7xeNNnHPq70OAESWgc",
+  authDomain:        "titulacion-app.firebaseapp.com",
+  projectId:         "titulacion-app",
+  storageBucket:     "titulacion-app.firebasestorage.app",
+  messagingSenderId: "1090661839477",
+  appId:             "1:1090661839477:web:228f2e87b419aa30293e3c"
 };
