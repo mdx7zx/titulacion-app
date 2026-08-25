@@ -129,6 +129,93 @@
   .cat-mini{height:5px;width:54px;background:var(--line-soft);border-radius:99px;overflow:hidden;flex:none;}
   .cat-mini > span{display:block;height:100%;background:var(--primary);border-radius:99px;}
 
+  .pc-sep{height:1px;background:var(--line-soft);margin:15px 0 13px;}
+  .pc-nota{
+    margin-top:9px;font-size:.76rem;color:var(--mid);
+    display:flex;align-items:center;gap:6px;
+  }
+  .pc-nota:empty{display:none;}
+
+  /* ---------- EXAMEN INTEGRAL ---------- */
+  .intsetup,.intpre,.intdone{display:none;flex-direction:column;flex:1;}
+  .intsetup.active,.intpre.active,.intdone.active{display:flex;}
+  .int-body{padding:4px 0 30px;}
+  .int-h{
+    font-family:"Fraunces",Georgia,serif;font-weight:500;
+    font-size:1.42rem;line-height:1.22;margin:10px 0 6px;
+  }
+  .int-sub{color:var(--ink-soft);font-size:.9rem;margin:0 0 18px;}
+  .int-hint{color:var(--ink-faint);font-size:.78rem;margin:-2px 0 12px;}
+
+  .int-opts{display:flex;flex-direction:column;gap:12px;}
+  .int-opt{
+    display:flex;flex-direction:column;gap:3px;text-align:left;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 17px;font-family:inherit;cursor:pointer;box-shadow:var(--shadow-soft);
+    transition:border-color .15s,transform .1s;
+  }
+  .int-opt:hover{border-color:var(--primary);}
+  .int-opt:active{transform:scale(.99);}
+  .int-opt-t{font-size:1.02rem;font-weight:700;color:var(--ink);}
+  .int-opt-d{font-size:.82rem;color:var(--ink-soft);line-height:1.4;}
+  .int-opt-n{font-size:.78rem;font-weight:600;color:var(--primary-deep);margin-top:5px;}
+
+  .int-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:15px 16px;margin:0 0 14px;box-shadow:var(--shadow-soft);
+  }
+  .int-label{
+    font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:10px;
+  }
+  .int-modo{font-size:1.1rem;font-weight:700;margin-bottom:14px;}
+  .int-sep{height:1px;background:var(--line-soft);margin:12px 0;}
+  .int-row{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:5px 0;font-size:.88rem;color:var(--ink-soft);
+  }
+  .int-row b{color:var(--ink);font-weight:600;}
+  .int-row-fuerte{
+    border-top:1px solid var(--line-soft);margin-top:6px;padding-top:9px;
+    font-weight:600;color:var(--ink);
+  }
+  .int-aviso{
+    background:var(--mid-wash);border-radius:12px;padding:11px 13px;
+    font-size:.83rem;color:var(--ink);line-height:1.45;margin:0 0 14px;
+  }
+  .int-resumen{
+    text-align:center;font-size:.92rem;color:var(--ink-soft);margin:2px 0 14px;
+  }
+
+  .int-bar-row{margin-bottom:11px;}
+  .int-bar-top{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:.84rem;margin-bottom:4px;
+  }
+  .int-bar-top span{color:var(--ink);}
+  .int-bar-top b{color:var(--ink-soft);font-weight:600;font-size:.78rem;white-space:nowrap;}
+  .int-bar{height:7px;border-radius:99px;background:var(--line-soft);overflow:hidden;}
+  .int-bar span{display:block;height:100%;border-radius:99px;}
+
+  .int-av{
+    border-left:3px solid var(--line);padding:4px 0 4px 11px;margin-bottom:8px;
+    font-size:.87rem;color:var(--ink);line-height:1.4;
+  }
+  .int-ad{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .int-ad-col h4{
+    margin:0 0 6px;font-size:.74rem;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .int-nota{
+    margin-top:12px;padding-top:10px;border-top:1px solid var(--line-soft);
+    font-size:.78rem;color:var(--ink-faint);line-height:1.45;
+  }
+  .intdone .done-actions{max-width:none;}
+  .intdone .done-stats{width:100%;}
+  .cta-int{background:var(--primary-deep);}
+  .cta-int:hover{background:var(--ink);}
+  @media (max-width:360px){ .int-ad{grid-template-columns:1fr;} }
+
   /* ---------- CUENTA ---------- */
   .cuenta{
     display:flex;align-items:center;gap:11px;
@@ -479,7 +566,7 @@
 
     <div class="progress-card">
       <div class="pc-top">
-        <span class="pc-label">Tu avance</span>
+        <span class="pc-label">Tu avance · tarjetas</span>
         <span class="pc-num"><b id="masterCount">0</b> / <span id="totalCount">0</span> dominadas</span>
       </div>
       <div class="bar" aria-hidden="true">
@@ -491,6 +578,22 @@
         <div><span class="dot" style="background:#9FD0CB"></span>En progreso <b id="lgProg" style="margin-left:2px">0</b></div>
         <div><span class="dot" style="background:var(--line)"></span>Por ver <b id="lgNew" style="margin-left:2px">0</b></div>
       </div>
+
+      <div class="pc-sep"></div>
+      <div class="pc-top">
+        <span class="pc-label">Preguntas de examen</span>
+        <span class="pc-num"><b id="qMasterCount">0</b> / <span id="qTotalCount">0</span> dominadas</span>
+      </div>
+      <div class="bar" aria-hidden="true">
+        <span class="seg-master" id="qSegMaster" style="width:0%"></span>
+        <span class="seg-prog" id="qSegProg" style="width:0%"></span>
+      </div>
+      <div class="legend">
+        <div><span class="dot" style="background:var(--primary)"></span>Dominadas <b id="qLgMaster" style="margin-left:2px">0</b></div>
+        <div><span class="dot" style="background:#9FD0CB"></span>En progreso <b id="qLgProg" style="margin-left:2px">0</b></div>
+        <div><span class="dot" style="background:var(--line)"></span>Por ver <b id="qLgNew" style="margin-left:2px">0</b></div>
+      </div>
+      <div class="pc-nota" id="qRepasoNota"></div>
     </div>
 
     <button class="cta" id="startMain">
@@ -510,6 +613,11 @@
       <button id="quizFailed">Repasar las que fallé<small id="quizFailedSub">aún no hay</small></button>
       <button id="quizLong">Examen largo<small>20 preguntas</small></button>
     </div>
+    <button class="cta cta-int" id="startIntegral">
+      <span>Examen Integral</span>
+      <small id="intSub">100 · 150 · todo el banco</small>
+    </button>
+
     <button class="timer-toggle" id="timerToggle" role="switch" aria-checked="true">
       <span class="tt-knob"></span>
       <span class="tt-label">⏱ Contrarreloj · 1 min por pregunta</span>
@@ -650,6 +758,97 @@
     </div>
     <div class="game-stage" id="gameStage"></div>
     <div class="game-foot" id="gameFoot"></div>
+  </section>
+
+  <!-- ============ EXAMEN INTEGRAL · elegir tamaño ============ -->
+  <section class="intsetup" id="intsetup">
+    <div class="topbar">
+      <button class="iconbtn" id="intSetupBack" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-head"><b>Examen Integral</b></div>
+    </div>
+    <div class="int-body">
+      <h2 class="int-h">Selecciona el número de preguntas del examen</h2>
+      <p class="int-sub" id="intSetupSub"></p>
+      <div class="int-opts" id="intOpciones"></div>
+    </div>
+  </section>
+
+  <!-- ============ EXAMEN INTEGRAL · antes de empezar ============ -->
+  <section class="intpre" id="intpre">
+    <div class="topbar">
+      <button class="iconbtn" id="intPreBack" aria-label="Volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-head"><b>Examen Integral</b></div>
+    </div>
+    <div class="int-body">
+      <div class="int-card">
+        <div class="int-modo" id="intPreModo"></div>
+        <div class="int-label">Bancos incluidos</div>
+        <div id="intPreBancos"></div>
+        <div class="int-sep"></div>
+        <div id="intPreResumen"></div>
+      </div>
+      <p class="int-aviso" id="intPreAviso" style="display:none"></p>
+      <button class="cta cta-quiz" id="intComenzar" style="margin-top:6px">
+        <span>Comenzar examen</span>
+        <small>tu avance se guarda pregunta por pregunta</small>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ EXAMEN INTEGRAL · resultados ============ -->
+  <section class="intdone" id="intdone">
+    <div class="topbar">
+      <button class="iconbtn" id="intDoneBack" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="games-head"><b>Resultado del Examen Integral</b></div>
+    </div>
+    <div class="int-body">
+      <h2 class="int-h" id="intDoneTitle">Resultado</h2>
+      <p class="int-sub" id="intDoneMsg"></p>
+
+      <div class="done-stats">
+        <div><b id="intdRight" style="color:var(--know)">0</b><span>Correctas</span></div>
+        <div><b id="intdWrong" style="color:var(--dont)">0</b><span>Falladas</span></div>
+        <div><b id="intdPct" style="color:var(--primary-deep)">0%</b><span>Acierto</span></div>
+      </div>
+      <p class="int-resumen" id="intdResumen"></p>
+      <div class="qd-stars" id="intdStars"></div>
+
+      <div class="int-card">
+        <div class="int-label">Resultado por banco</div>
+        <div id="intdBancos"></div>
+      </div>
+
+      <div class="int-card" id="intdRetencionBox">
+        <div class="int-label">Retención de conocimientos</div>
+        <div id="intdRetencion"></div>
+      </div>
+
+      <div class="int-card">
+        <div class="int-label">Nuevos avances</div>
+        <div id="intdAvances"></div>
+      </div>
+
+      <div class="int-card">
+        <div class="int-label">Tu avance después de este examen</div>
+        <div id="intdAntesDespues"></div>
+      </div>
+
+      <div class="int-card">
+        <div class="int-label">Resultado por tema</div>
+        <p class="int-hint">De menor a mayor dominio: lo de arriba es lo que más conviene estudiar.</p>
+        <div id="intdTemas"></div>
+      </div>
+
+      <div class="int-label" style="margin:22px 0 10px">¿Qué sigue?</div>
+      <div class="done-actions" id="intdAcciones"></div>
+      <button class="ghost" id="intdHome" style="margin-top:12px">Volver al inicio</button>
+    </div>
   </section>
 
 </div>
@@ -967,7 +1166,7 @@ const store = {
 /* Lee de golpe todo el estado guardado en el dispositivo. */
 async function leerEstadoLocal(){
   const out = {};
-  for (const k of [KEY, QKEY, STARSKEY, GSKEY, TKEY]) out[k] = await store.get(k);
+  for (const k of [KEY, QKEY, STARSKEY, GSKEY, TKEY, INTKEY]) out[k] = await store.get(k);
   return out;
 }
 
@@ -1981,6 +2180,13 @@ const FB_CDN = "https://www.gstatic.com/firebasejs/10.14.1/";
 let colaNube = {}, colaTimer = null;
 
 function objDe(s){ try { return s ? JSON.parse(s) : {}; } catch(e){ return {}; } }
+function arrDe(s){ try { const v = s ? JSON.parse(s) : []; return Array.isArray(v) ? v : []; } catch(e){ return []; } }
+/* Historial de examenes: se unen los de ambos aparatos, sin repetir. */
+function mergeHist(a, b){
+  const m = {};
+  a.concat(b).forEach(x=>{ if (x && x.id) m[x.id] = x; });
+  return Object.keys(m).map(k=>m[k]).sort((x,y)=>(y.fecha||0)-(x.fecha||0)).slice(0,100);
+}
 function numDe(s){ const n = parseInt(s,10); return isNaN(n) ? 0 : n; }
 
 /* --- Fusión de avances cuando el mismo usuario estudió en dos
@@ -2004,7 +2210,11 @@ function mergeQuiz(a, b){
     const x = out[id], y = b[id];
     if (!x){ out[id] = y; continue; }
     const ix = (x.r||0)+(x.w||0), iy = (y.r||0)+(y.w||0);
-    out[id] = iy > ix ? y : x;      // gana el dispositivo con más intentos
+    const base = Object.assign({}, iy > ix ? y : x);   // gana el de más intentos
+    base.mast = !!(x.mast || y.mast);                  // el logro Dominada no se pierde
+    base.box  = Math.max(x.box||1, y.box||1);
+    base.seen = !!(x.seen || y.seen);
+    out[id] = base;
   }
   return out;
 }
@@ -2026,6 +2236,7 @@ function mergeEstado(local, remoto){
   o[STARSKEY] = String(Math.max(numDe(local[STARSKEY]), numDe(remoto[STARSKEY])));
   o[GSKEY]    = JSON.stringify(mergeScores(objDe(local[GSKEY]),  objDe(remoto[GSKEY])));
   o[TKEY]     = local[TKEY] != null ? local[TKEY] : (remoto[TKEY] != null ? remoto[TKEY] : "1");
+  o[INTKEY]   = JSON.stringify(mergeHist(arrDe(local[INTKEY]), arrDe(remoto[INTKEY])));
   return o;
 }
 
@@ -2036,6 +2247,9 @@ function aplicarEstado(e){
   stars = numDe(e[STARSKEY]);
   try { gameScores = JSON.parse(e[GSKEY] || "{}"); } catch(_){ gameScores = {}; }
   if (e[TKEY] != null) timedMode = (e[TKEY] === "1" || e[TKEY] === true);
+  intHist = arrDe(e[INTKEY]);
+  construirGemelas();
+  migrarQuizProgress();
   refreshTimerToggle(); buildCats(); renderHome();
 }
 
@@ -2216,6 +2430,10 @@ async function init(){
   if (sraw){ const n = parseInt(sraw,10); if(!isNaN(n)) stars = n; }
   const graw = await store.get(GSKEY);
   if (graw){ try { gameScores = JSON.parse(graw); } catch(e){ gameScores = {}; } }
+  const iraw = await store.get(INTKEY);
+  if (iraw){ try { intHist = JSON.parse(iraw) || []; } catch(e){ intHist = []; } }
+  construirGemelas();
+  migrarQuizProgress();
   refreshTimerToggle();
   buildCats();
   renderHome();
@@ -2292,6 +2510,31 @@ function renderHome(){
   const hardBtn = document.getElementById("startHard");
   document.getElementById("hardSub").textContent = hardN ? (hardN + " por reforzar") : "aún no hay";
   hardBtn.disabled = hardN === 0;
+
+  // Preguntas de examen: mismo avance acumulado, en la seccion activa
+  const sqDeck = statsQuiz(dQuiz());
+  document.getElementById("qMasterCount").textContent = sqDeck.dominadas;
+  document.getElementById("qTotalCount").textContent  = sqDeck.total;
+  document.getElementById("qLgMaster").textContent    = sqDeck.dominadas;
+  document.getElementById("qLgProg").textContent      = sqDeck.progreso;
+  document.getElementById("qLgNew").textContent       = sqDeck.porver;
+  const tq = sqDeck.total || 1;
+  document.getElementById("qSegMaster").style.width = (sqDeck.dominadas/tq*100)+"%";
+  document.getElementById("qSegProg").style.width   = (sqDeck.progreso/tq*100)+"%";
+  // la retencion reciente se muestra aparte del avance acumulado
+  document.getElementById("qRepasoNota").textContent = sqDeck.repaso
+    ? ("● " + sqDeck.repaso + (sqDeck.repaso===1 ? " dominada necesita repaso" : " dominadas necesitan repaso"))
+    : "";
+
+  // Examen Integral: dominio acumulado sobre TODAS las preguntas, de todos los bancos
+  const univ = universoIntegral();
+  const sq = statsQuiz(univ);
+  const iSub = document.getElementById("intSub");
+  if (iSub){
+    iSub.textContent = sq.dominadas
+      ? (sq.dominadas + " de " + sq.total + " preguntas dominadas · 100 · 150 · todo el banco")
+      : ("Evalúa tu progreso y comprueba tu dominio de todo el contenido");
+  }
 
   // Examen: preguntas falladas
   const failedN = dQuiz().filter(q => quizProgress[q.id] && quizProgress[q.id].lw).length;
@@ -2480,8 +2723,7 @@ function timeUp(){
     if (idx === correct){ b.classList.add("is-correct"); mark.innerHTML = '<path d="M20 6L9 17l-5-5"/>'; }
     else { b.classList.add("is-dim"); }
   });
-  const p = quizProgress[q.id] || {r:0, w:0, lw:false};
-  p.w++; p.lw = true; quizProgress[q.id] = p; persistQuiz();
+  registrarRespuesta(q, false);   // mismas reglas que una respuesta fallada
   qzWrongList.push(q);
 
   const fb = document.getElementById("quizFeedback");
@@ -2502,6 +2744,7 @@ function timeUp(){
 
 function startQuiz(opts){
   const {size=10, failedOnly=false, retry=false} = opts || {};
+  esIntegral = false;
   qzIsRetry = retry || failedOnly;
   let pool;
   if (failedOnly){
@@ -2577,12 +2820,9 @@ function chooseOption(i){
     }
   });
 
-  // registrar avance
-  const p = quizProgress[q.id] || {r:0, w:0, lw:false};
-  if (isRight){ p.r++; p.lw = false; qzRight++; }
-  else { p.w++; p.lw = true; qzWrongList.push(q); }
-  quizProgress[q.id] = p;
-  persistQuiz();
+  // registrar avance con las reglas de dominio (mismo historial en todos los modos)
+  registrarRespuesta(q, isRight);
+  if (isRight) qzRight++; else qzWrongList.push(q);
   document.getElementById("quizScore").textContent = "✓ " + qzRight;
 
   // retroalimentación
@@ -2621,6 +2861,7 @@ function nextQuestion(){
 }
 
 function finishQuiz(){
+  if (esIntegral) return finishIntegral();
   stopTimer();
   const total = qz.length;
   const wrong = total - qzRight;
@@ -3171,7 +3412,584 @@ function initCodigo(){
 /* ============================================================
    NAVEGACIÓN Y EVENTOS
    ============================================================ */
-const VIEWS = ["home","study","done","quiz","quizdone","games","gameview"];
+/* ============================================================
+   EXAMEN INTEGRAL
+   Evaluacion larga sobre todos los bancos activos, que ademas
+   mide retencion y consolida el avance acumulado.
+
+   Principio rector: una pregunta que ya alcanzo Dominada NO
+   pierde ese logro por fallarla despues. El fallo se registra
+   como "necesita repaso", no como retroceso.
+   ============================================================ */
+
+const QDOM = 4;                                   // caja desde la cual cuenta como Dominada
+const QINTERVALOS = {1:0, 2:1, 3:3, 4:7, 5:16};   // dias, igual que las tarjetas
+const INTKEY = "epac_integral_hist_v1";
+
+let intHist = [];          // historial de examenes integrales
+let esIntegral = false;    // el examen en curso es integral
+let intModo = null;        // 100 | 150 | "todo"
+let intAntes = null;       // fotografia del avance antes de empezar
+let intPool = [];          // preguntas elegidas (ya barajadas)
+
+async function persistIntHist(){ await store.set(INTKEY, JSON.stringify(intHist)); }
+
+/* --- Bancos: se detectan solos desde DECKS. Si manana se agrega
+       otro banco, entra al Examen Integral sin tocar nada mas.
+       Un banco puede excluirse con {activo:false}. --- */
+function bancosActivos(){
+  return Object.keys(DECKS).filter(k => DECKS[k].activo !== false);
+}
+function nombreBanco(b){ return (DECKS[b] && DECKS[b].name) || b; }
+function bancoDe(q){ return q.d || "epac"; }
+
+/* --- Normaliza para detectar la misma pregunta escrita distinto --- */
+function normPregunta(s){
+  return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+         .replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+}
+/* Una misma pregunta puede estar registrada en dos bancos con ids
+   distintos. Estas son gemelas: deben compartir avance, o dominarla en
+   un banco la dejaria como "por ver" en el otro. */
+let GEMELAS = null;
+function construirGemelas(){
+  const porTexto = {};
+  QUIZ.forEach(q=>{ const k = normPregunta(q.q); (porTexto[k] = porTexto[k] || []).push(q.id); });
+  GEMELAS = {};
+  Object.keys(porTexto).forEach(k=>{
+    const ids = porTexto[k];
+    if (ids.length > 1) ids.forEach(id=>{ GEMELAS[id] = ids; });
+  });
+}
+/* Devuelve el mejor avance entre una pregunta y sus gemelas. */
+function avanceDe(id){
+  const gem = GEMELAS && GEMELAS[id];
+  if (!gem) return quizProgress[id];
+  let mejor = null;
+  gem.forEach(otro=>{
+    const p = quizProgress[otro];
+    if (!p) return;
+    if (!mejor){ mejor = p; return; }
+    if (p.mast && !mejor.mast){ mejor = p; return; }
+    if (!!p.mast === !!mejor.mast &&
+        (p.r||0)+(p.w||0) > (mejor.r||0)+(mejor.w||0)) mejor = p;
+  });
+  return mejor;
+}
+
+/* Todas las preguntas de los bancos activos, sin repetir ninguna
+   aunque este registrada dos veces en los datos. */
+function universoIntegral(){
+  const activos = bancosActivos();
+  const vistas = new Set(), out = [];
+  QUIZ.forEach(q=>{
+    if (activos.indexOf(bancoDe(q)) < 0) return;
+    const k = normPregunta(q.q);
+    if (vistas.has(k)) return;
+    vistas.add(k); out.push(q);
+  });
+  return out;
+}
+
+/* ============================================================
+   MODELO DE DOMINIO DE LAS PREGUNTAS
+   ============================================================ */
+
+/* El avance viejo solo guardaba {r,w,lw}. Le damos caja y estado
+   sin inventar progreso: la caja sale de aciertos menos fallos. */
+function migrarQuizProgress(){
+  let cambio = false;
+  Object.keys(quizProgress).forEach(id=>{
+    const p = quizProgress[id];
+    if (!p || p.box != null) return;
+    const r = p.r||0, w = p.w||0;
+    p.seen = (r + w) > 0;
+    p.box  = Math.max(1, Math.min(5, 1 + r - w));
+    p.mast = p.box >= QDOM;
+    p.rev  = !!(p.mast && p.lw);
+    p.ts   = p.ts || 0;
+    p.due  = p.due || 0;
+    cambio = true;
+  });
+  if (cambio) persistQuiz();
+}
+
+function qNuevo(){
+  return {r:0, w:0, lw:false, box:1, seen:false, due:0, ts:0, mast:false, rev:false};
+}
+
+/* Estado visible de una pregunta. "dominada" es logro acumulado:
+   se conserva aunque haya un fallo reciente (que se marca aparte). */
+function qEstado(p){
+  if (!p || !p.seen) return "porver";
+  if (p.mast) return "dominada";
+  if ((p.box||1) <= 2) return "dificil";
+  return "progreso";
+}
+
+function statsQuiz(pool){
+  const s = {dominadas:0, progreso:0, porver:0, repaso:0, dificiles:0, total:pool.length};
+  pool.forEach(q=>{
+    const p = avanceDe(q.id);
+    const e = qEstado(p);
+    if (e === "porver") s.porver++;
+    else if (e === "dominada"){ s.dominadas++; if (p.rev) s.repaso++; }
+    else { s.progreso++; if (e === "dificil") s.dificiles++; }
+  });
+  return s;
+}
+
+/* Registra una respuesta aplicando las reglas de dominio.
+   La usan TODOS los modos de examen, para que el historial sea uno solo. */
+function registrarRespuesta(q, acerto){
+  const p = Object.assign(qNuevo(), avanceDe(q.id) || {});
+  if (acerto){
+    p.r++; p.lw = false;
+    p.box = Math.min(5, (p.box||1) + 1);
+    if (p.box >= QDOM) p.mast = true;      // logro alcanzado
+    p.rev = false;                         // acertar limpia la marca de repaso
+  } else {
+    p.w++; p.lw = true;
+    if (p.mast){
+      p.rev = true;                        // sigue Dominada, pero con fallo reciente
+      p.box = Math.max(QDOM, p.box||QDOM); // no retrocede por debajo de Dominada
+    } else {
+      p.box = 1;
+    }
+  }
+  p.seen = true;
+  p.ts = Date.now();
+  p.due = p.rev ? Date.now() : Date.now() + (QINTERVALOS[p.box]||0) * DAY;
+  const ids = (GEMELAS && GEMELAS[q.id]) || [q.id];
+  ids.forEach(id=>{ quizProgress[id] = Object.assign({}, p); });
+  persistQuiz();
+  return p;
+}
+
+/* ============================================================
+   SELECCION INTELIGENTE
+   Reparte por estado (mas peso a lo que falta trabajar, pero sin
+   dejar fuera lo dominado, que sirve para medir retencion) y
+   equilibra entre bancos y entre temas.
+   ============================================================ */
+
+const CUOTAS = [
+  {k:"fallada",  peso:0.30},   // 1. lo que ya se fallo
+  {k:"progreso", peso:0.24},   // 2. lo que va a medias
+  {k:"porver",   peso:0.22},   // 3. lo que no se ha visto
+  {k:"dificil",  peso:0.13},   // 4. lo que mas cuesta
+  {k:"dominada", peso:0.11},   // 5. lo dominado, para comprobar retencion
+];
+const ORDEN_CUOTAS = ["fallada","progreso","porver","dificil","dominada"];
+
+/* Cada pregunta cae en un solo cubo. */
+function cuboDe(q){
+  const p = avanceDe(q.id);
+  if (!p || !p.seen) return "porver";
+  if (p.rev || p.lw)  return "fallada";
+  if (p.mast)         return "dominada";
+  if ((p.box||1) <= 2) return "dificil";
+  return "progreso";
+}
+
+/* Toma n preguntas de un mismo banco rotando temas, para que ningun
+   tema acapare aunque tenga muchas mas preguntas que los demas. */
+function tomarPorTema(cands, n){
+  if (n <= 0 || !cands.length) return [];
+  if (n >= cands.length) return shuffle(cands.slice());
+  const porTema = {};
+  shuffle(cands.slice()).forEach(q=>{ (porTema[q.c] = porTema[q.c] || []).push(q); });
+  const temas = shuffle(Object.keys(porTema));
+  const out = [];
+  let faltan = n, i = 0, secos = 0;
+  while (faltan > 0 && secos < temas.length){
+    const t = temas[i % temas.length];
+    if (porTema[t].length){ out.push(porTema[t].shift()); faltan--; secos = 0; }
+    else secos++;
+    i++;
+  }
+  return out;
+}
+
+/* Reparte n lugares entre los bancos, en proporcion a cuanto contenido
+   tiene cada uno. Es una cuota GLOBAL del examen: se fija antes de mirar
+   el avance, para que un banco no acapare solo porque es el que se ha
+   estudiado y concentra todas las falladas y dominadas. */
+function cuotaPorBanco(porBanco, n, totalDisp){
+  const bancos = Object.keys(porBanco);
+  const cuota = {};
+  let asignado = 0;
+  bancos.forEach(b=>{
+    cuota[b] = Math.min(porBanco[b].length, Math.floor(n * porBanco[b].length / totalDisp));
+    asignado += cuota[b];
+  });
+  const orden = bancos.slice().sort((a,b)=> porBanco[b].length - porBanco[a].length);
+  let resto = n - asignado, vueltas = 0;
+  while (resto > 0 && vueltas < 10000){
+    const b = orden[vueltas % orden.length];
+    if (cuota[b] < porBanco[b].length){ cuota[b]++; resto--; }
+    vueltas++;
+  }
+  return cuota;
+}
+
+/* Llena la cuota de un banco respetando el orden de prioridad por estado. */
+function elegirDeBanco(preguntas, cupo){
+  const cubos = {fallada:[], progreso:[], porver:[], dificil:[], dominada:[]};
+  preguntas.forEach(q => cubos[cuboDe(q)].push(q));
+  const usados = new Set(), out = [];
+  CUOTAS.forEach(c=>{
+    const meta = Math.round(cupo * c.peso);
+    tomarPorTema(cubos[c.k].filter(q=>!usados.has(q.id)), meta)
+      .forEach(q=>{ usados.add(q.id); out.push(q); });
+  });
+  // si algun cubo estaba vacio o corto, se completa respetando la prioridad
+  for (const k of ORDEN_CUOTAS){
+    if (out.length >= cupo) break;
+    tomarPorTema(cubos[k].filter(q=>!usados.has(q.id)), cupo - out.length)
+      .forEach(q=>{ usados.add(q.id); out.push(q); });
+  }
+  return out.slice(0, cupo);
+}
+
+/* Arma el examen. modo: 100 | 150 | "todo" */
+function armarIntegral(modo){
+  const todas = universoIntegral();
+  if (modo === "todo") return shuffle(todas.slice());
+
+  const n = Math.min(modo, todas.length);
+  if (n >= todas.length) return shuffle(todas.slice());
+
+  const porBanco = {};
+  todas.forEach(q=>{ const b = bancoDe(q); (porBanco[b] = porBanco[b] || []).push(q); });
+  const cuota = cuotaPorBanco(porBanco, n, todas.length);
+
+  const elegidas = [], usados = new Set();
+  Object.keys(porBanco).forEach(b=>{
+    elegirDeBanco(porBanco[b], cuota[b]).forEach(q=>{ usados.add(q.id); elegidas.push(q); });
+  });
+
+  // si un banco no alcanzo a llenar su cuota, la completan los demas
+  if (elegidas.length < n){
+    const sobran = todas.filter(q=>!usados.has(q.id));
+    elegirDeBanco(sobran, n - elegidas.length).forEach(q=>{ usados.add(q.id); elegidas.push(q); });
+  }
+  return shuffle(elegidas).slice(0, n);
+}
+
+/* Baraja las opciones sin tocar la pregunta original ni cambiar
+   cual es la correcta: devuelve una copia con el orden nuevo. */
+function barajarOpciones(q){
+  if (!Array.isArray(q.o) || q.o.length < 2) return Object.assign({}, q);
+  const idx = shuffle(q.o.map((_,i)=>i));
+  const tieneE = Array.isArray(q.e) && q.e.length === q.o.length;
+  return Object.assign({}, q, {
+    o: idx.map(i=>q.o[i]),
+    e: tieneE ? idx.map(i=>q.e[i]) : q.e,
+    a: idx.indexOf(q.a)
+  });
+}
+
+/* ============================================================
+   PANTALLAS
+   ============================================================ */
+
+function abrirIntegral(){
+  const todas = universoIntegral();
+  const disp = todas.length;
+  document.getElementById("intSetupSub").textContent =
+    disp + " preguntas disponibles en " + bancosActivos().length + " bancos";
+
+  const cont = document.getElementById("intOpciones");
+  cont.innerHTML = "";
+  const modos = [
+    {m:100,     t:"100 preguntas",  d:"Examen amplio con preguntas de los distintos bancos y temas."},
+    {m:150,     t:"150 preguntas",  d:"Examen intensivo, con mayor cobertura del contenido."},
+    {m:"todo",  t:"Examen completo",d:"Todas las preguntas de todos los bancos activos."}
+  ];
+  modos.forEach(x=>{
+    const n = (x.m === "todo") ? disp : Math.min(x.m, disp);
+    const pie = (x.m === "todo")
+      ? ("Todo el banco · " + n + " preguntas")
+      : (n + " de " + disp + " disponibles");
+    const b = document.createElement("button");
+    b.className = "int-opt";
+    b.innerHTML =
+      '<span class="int-opt-t">'+x.t+'</span>'+
+      '<span class="int-opt-d">'+x.d+'</span>'+
+      '<span class="int-opt-n">'+pie+'</span>';
+    b.onclick = ()=> prepararIntegral(x.m);
+    cont.appendChild(b);
+  });
+  showView("intsetup");
+}
+
+function prepararIntegral(modo){
+  intModo = modo;
+  intPool = armarIntegral(modo);
+
+  const disp = universoIntegral().length;
+  const porBanco = {};
+  intPool.forEach(q=>{ const b = bancoDe(q); porBanco[b] = (porBanco[b]||0) + 1; });
+
+  document.getElementById("intPreModo").textContent =
+    (modo === "todo") ? "Examen completo" : (modo + " preguntas");
+
+  const lista = document.getElementById("intPreBancos");
+  lista.innerHTML = "";
+  bancosActivos().forEach(b=>{
+    const d = document.createElement("div");
+    d.className = "int-row";
+    d.innerHTML = '<span>'+nombreBanco(b)+'</span><b>'+(porBanco[b]||0)+' preguntas</b>';
+    lista.appendChild(d);
+  });
+
+  const res = document.getElementById("intPreResumen");
+  res.innerHTML =
+    '<div class="int-row"><span>Preguntas disponibles</span><b>'+disp+'</b></div>'+
+    '<div class="int-row"><span>Preguntas que responderás</span><b>'+intPool.length+'</b></div>';
+
+  const aviso = document.getElementById("intPreAviso");
+  if (modo !== "todo" && intPool.length < modo){
+    aviso.textContent = "Seleccionaste "+modo+" preguntas, pero actualmente existen "+
+      intPool.length+" disponibles. El examen se realizará con las "+intPool.length+" existentes.";
+    aviso.style.display = "block";
+  } else {
+    aviso.style.display = "none";
+  }
+  showView("intpre");
+}
+
+/* ============================================================
+   EJECUCION
+   ============================================================ */
+
+function fotoAvance(){
+  const foto = {};
+  universoIntegral().forEach(q=>{
+    const p = avanceDe(q.id);
+    foto[q.id] = {
+      estado: qEstado(p),
+      mast: !!(p && p.mast),
+      box: (p && p.box) || 1,
+      rev: !!(p && p.rev)
+    };
+  });
+  return foto;
+}
+
+function comenzarIntegral(){
+  if (!intPool.length) return;
+  intAntes = { porPregunta: fotoAvance(), global: statsQuiz(universoIntegral()) };
+  esIntegral = true;
+  qzIsRetry = false;
+  qz = intPool.map(barajarOpciones);
+  qzIndex = 0; qzRight = 0; qzAnswered = false; qzWrongList = [];
+  showView("quiz");
+  renderQuestion();
+}
+
+function finishIntegral(){
+  stopTimer();
+  esIntegral = false;
+
+  const total = qz.length;
+  const falladas = qzWrongList.length;
+  const correctas = total - falladas;
+  const pct = total ? Math.round(correctas/total*100) : 0;
+  const idsFallados = new Set(qzWrongList.map(q=>q.id));
+
+  /* --- desgloses --- */
+  const porBanco = {}, porTema = {};
+  qz.forEach(q=>{
+    const b = bancoDe(q), t = q.c;
+    (porBanco[b] = porBanco[b] || {ok:0, n:0}).n++;
+    (porTema[t]  = porTema[t]  || {ok:0, n:0}).n++;
+    if (!idsFallados.has(q.id)){ porBanco[b].ok++; porTema[t].ok++; }
+  });
+
+  /* --- retencion y avances --- */
+  let domEval=0, domOk=0, domFallo=0, nuevasDom=0, avanzaron=0, necesitanRepaso=0;
+  const listaRepasoDom = [], listaFalladas = [];
+  qz.forEach(q=>{
+    const antes = (intAntes && intAntes.porPregunta[q.id]) || {mast:false, box:1};
+    const ahora = quizProgress[q.id] || qNuevo();
+    const fallo = idsFallados.has(q.id);
+    if (antes.mast){
+      domEval++;
+      if (fallo){ domFallo++; listaRepasoDom.push(q); }
+      else domOk++;
+    } else {
+      if (ahora.mast) nuevasDom++;
+      else if (!fallo && (ahora.box||1) > (antes.box||1)) avanzaron++;
+    }
+    if (fallo && !ahora.mast){ necesitanRepaso++; listaFalladas.push(q); }
+  });
+  const retencion = domEval ? Math.round(domOk/domEval*1000)/10 : null;
+
+  const despues = statsQuiz(universoIntegral());
+  const antesG  = (intAntes && intAntes.global) || despues;
+
+  /* --- estrellas, con el mismo criterio de los otros examenes --- */
+  let ganadas = correctas;
+  if (pct >= 70) ganadas += Math.round(total/10);
+  if (falladas === 0) ganadas += 25;
+  stars += ganadas; persistStars();
+
+  /* --- historial --- */
+  const registro = {
+    id: "int"+Date.now(),
+    fecha: Date.now(),
+    modo: (intModo === "todo") ? "completo" : String(intModo),
+    total: total, correctas: correctas, incorrectas: falladas, pct: pct,
+    bancos: bancosActivos().map(b=>({
+      id:b, nombre:nombreBanco(b),
+      ok:(porBanco[b]||{ok:0}).ok, n:(porBanco[b]||{n:0}).n
+    })).filter(x=>x.n>0),
+    temas: Object.keys(porTema).map(t=>({
+      id:t, nombre:(CATS[t]||{}).name || t, ok:porTema[t].ok, n:porTema[t].n
+    })),
+    nuevasDominadas: nuevasDom,
+    dominadasRetenidas: domOk,
+    dominadasConFallo: domFallo,
+    necesitanRepaso: necesitanRepaso
+  };
+  intHist.unshift(registro);
+  if (intHist.length > 100) intHist.length = 100;
+  persistIntHist();
+
+  pintarResultadoIntegral(registro, {
+    retencion: retencion, domEval: domEval, avanzaron: avanzaron,
+    antes: antesG, despues: despues,
+    listaFalladas: listaFalladas, listaRepasoDom: listaRepasoDom,
+    ganadas: ganadas
+  });
+  showView("intdone");
+}
+
+/* ============================================================
+   RESULTADOS
+   ============================================================ */
+
+function barraPct(nombre, ok, n){
+  const p = n ? Math.round(ok/n*1000)/10 : 0;
+  const color = p >= 80 ? "var(--know)" : (p >= 60 ? "var(--mid)" : "var(--dont)");
+  return '<div class="int-bar-row">'+
+           '<div class="int-bar-top"><span>'+nombre+'</span><b>'+ok+'/'+n+' · '+p+'%</b></div>'+
+           '<div class="int-bar"><span style="width:'+p+'%;background:'+color+'"></span></div>'+
+         '</div>';
+}
+
+function pintarResultadoIntegral(r, x){
+  document.getElementById("intDoneTitle").textContent =
+    r.pct >= 90 ? "Excelente examen" : (r.pct >= 70 ? "Buen resultado" : "A seguir practicando");
+  document.getElementById("intDoneMsg").textContent =
+    r.pct >= 70
+      ? "Abajo tienes en qué bancos y temas te fue mejor, y qué conviene repasar."
+      : "Ya sabes exactamente qué reforzar. Empieza por lo que fallaste.";
+
+  document.getElementById("intdRight").textContent = r.correctas;
+  document.getElementById("intdWrong").textContent = r.incorrectas;
+  document.getElementById("intdPct").textContent   = r.pct + "%";
+  document.getElementById("intdResumen").textContent =
+    r.correctas + " / " + r.total + " correctas · " + r.pct + "% de aciertos";
+
+  document.getElementById("intdStars").innerHTML =
+    '<span class="stars-chip" style="font-size:1rem">★ +'+x.ganadas+'</span> '+
+    '<span style="color:var(--ink-soft);font-size:.86rem">Total: '+stars+' estrellas</span>';
+
+  document.getElementById("intdBancos").innerHTML =
+    r.bancos.map(b=>barraPct(b.nombre, b.ok, b.n)).join("");
+
+  document.getElementById("intdTemas").innerHTML =
+    r.temas.slice().sort((a,b)=> (a.ok/a.n) - (b.ok/b.n))
+      .map(t=>barraPct(t.nombre, t.ok, t.n)).join("");
+
+  /* retencion */
+  const ret = document.getElementById("intdRetencion");
+  if (x.domEval > 0){
+    ret.innerHTML =
+      '<div class="int-row"><span>Preguntas Dominadas evaluadas</span><b>'+x.domEval+'</b></div>'+
+      '<div class="int-row"><span>Respondidas correctamente</span><b style="color:var(--know)">'+r.dominadasRetenidas+'</b></div>'+
+      '<div class="int-row"><span>Con fallo reciente</span><b style="color:var(--mid)">'+r.dominadasConFallo+'</b></div>'+
+      '<div class="int-row int-row-fuerte"><span>Retención de lo Dominado</span><b>'+x.retencion+'%</b></div>';
+    document.getElementById("intdRetencionBox").style.display = "block";
+  } else {
+    document.getElementById("intdRetencionBox").style.display = "none";
+  }
+
+  /* nuevos avances */
+  const av = [];
+  if (r.nuevasDominadas)     av.push(['+'+r.nuevasDominadas+' preguntas alcanzaron Dominada','var(--know)']);
+  if (x.avanzaron)           av.push(['+'+x.avanzaron+' preguntas avanzaron dentro de En progreso','var(--primary)']);
+  if (r.dominadasRetenidas)  av.push([r.dominadasRetenidas+' conocimientos Dominados reforzados','var(--primary-deep)']);
+  if (r.necesitanRepaso)     av.push([r.necesitanRepaso+' preguntas falladas necesitan repaso','var(--dont)']);
+  if (r.dominadasConFallo)   av.push([r.dominadasConFallo+' Dominadas presentaron un fallo reciente','var(--mid)']);
+  document.getElementById("intdAvances").innerHTML =
+    av.length ? av.map(a=>'<div class="int-av" style="border-left-color:'+a[1]+'">'+a[0]+'</div>').join("")
+              : '<div class="int-av">Sin cambios en el avance esta vez.</div>';
+
+  /* antes y despues */
+  const a = x.antes, d = x.despues;
+  document.getElementById("intdAntesDespues").innerHTML =
+    '<div class="int-ad">'+
+      '<div class="int-ad-col"><h4>Antes</h4>'+
+        '<div class="int-row"><span>Dominadas</span><b>'+a.dominadas+'</b></div>'+
+        '<div class="int-row"><span>En progreso</span><b>'+a.progreso+'</b></div>'+
+        '<div class="int-row"><span>Por ver</span><b>'+a.porver+'</b></div>'+
+      '</div>'+
+      '<div class="int-ad-col"><h4>Después</h4>'+
+        '<div class="int-row"><span>Dominadas</span><b>'+d.dominadas+'</b></div>'+
+        '<div class="int-row"><span>En progreso</span><b>'+d.progreso+'</b></div>'+
+        '<div class="int-row"><span>Por ver</span><b>'+d.porver+'</b></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="int-nota">El total histórico de Dominadas no baja por un fallo reciente: '+
+    'el error se registra como repaso, no como retroceso.</div>';
+
+  /* acciones de repaso */
+  const acc = document.getElementById("intdAcciones");
+  acc.innerHTML = "";
+  const añadir = (txt, sub, cls, fn, activo)=>{
+    const b = document.createElement("button");
+    b.className = cls;
+    b.innerHTML = '<span>'+txt+'</span><small>'+sub+'</small>';
+    if (activo){ b.onclick = fn; } else { b.disabled = true; }
+    acc.appendChild(b);
+  };
+  añadir("Repasar las que fallé", x.listaFalladas.length ? x.listaFalladas.length+" preguntas" : "no fallaste ninguna",
+        "cta cta-quiz", ()=> examenDeLista(x.listaFalladas), x.listaFalladas.length>0);
+  añadir("Repasar Dominadas con fallo reciente", x.listaRepasoDom.length ? x.listaRepasoDom.length+" preguntas" : "ninguna",
+        "cta", ()=> examenDeLista(x.listaRepasoDom), x.listaRepasoDom.length>0);
+  const univ = universoIntegral();
+  const TOPE = 20;   // los repasos abiertos se limitan, pero se dice cuantas seran
+  const etiqueta = (lista)=>{
+    if (!lista.length) return "ninguna";
+    const n = Math.min(lista.length, TOPE);
+    return (n < lista.length) ? (n + " de " + lista.length + " preguntas") : (n + " preguntas");
+  };
+  const dificiles = univ.filter(q=>{ const p=avanceDe(q.id); return p && p.seen && !p.mast && (p.box||1)<=2; });
+  añadir("Repasar mis difíciles", etiqueta(dificiles),
+        "cta", ()=> examenDeLista(shuffle(dificiles.slice()).slice(0,TOPE)), dificiles.length>0);
+  const enProg = univ.filter(q=>{ const p=avanceDe(q.id); return p && p.seen && !p.mast; });
+  añadir("Repasar En progreso", etiqueta(enProg),
+        "cta", ()=> examenDeLista(shuffle(enProg.slice()).slice(0,TOPE)), enProg.length>0);
+  añadir("Realizar otro Examen Integral", "elegir número de preguntas",
+        "cta", ()=> abrirIntegral(), true);
+}
+
+/* Lanza un examen normal con una lista concreta de preguntas. */
+function examenDeLista(lista){
+  if (!lista || !lista.length) return;
+  esIntegral = false;
+  qzIsRetry = true;
+  qz = shuffle(lista.slice()).map(barajarOpciones);
+  qzIndex = 0; qzRight = 0; qzAnswered = false; qzWrongList = [];
+  showView("quiz");
+  renderQuestion();
+}
+
+const VIEWS = ["home","study","done","quiz","quizdone","games","gameview","intsetup","intpre","intdone"];
 function showView(v){
   if (v !== "quiz") stopTimer();
   if (v !== "gameview") clearGameTimers();
@@ -3200,7 +4018,7 @@ function attachEvents(){
   document.getElementById("startQuiz").onclick = ()=> startQuiz({size:10});
   document.getElementById("quizLong").onclick  = ()=> startQuiz({size:20});
   document.getElementById("quizFailed").onclick= ()=> startQuiz({failedOnly:true});
-  document.getElementById("quizBack").onclick  = ()=> showView("home");
+  document.getElementById("quizBack").onclick  = ()=>{ esIntegral = false; showView("home"); };
   document.getElementById("qdHome").onclick    = ()=> showView("home");
   document.getElementById("qdAgain").onclick   = ()=> startQuiz({size:10});
   document.getElementById("qdRetry").onclick   = ()=> startQuiz({failedOnly:true, retry:true});
@@ -3254,6 +4072,13 @@ function attachEvents(){
       if (confirm("¿Cerrar sesión? Tu avance queda guardado en tu cuenta y en este dispositivo.")) salir();
     } else entrar();
   };
+
+  document.getElementById("startIntegral").onclick = ()=> abrirIntegral();
+  document.getElementById("intSetupBack").onclick  = ()=> showView("home");
+  document.getElementById("intPreBack").onclick    = ()=> abrirIntegral();
+  document.getElementById("intComenzar").onclick   = ()=> comenzarIntegral();
+  document.getElementById("intDoneBack").onclick   = ()=> showView("home");
+  document.getElementById("intdHome").onclick      = ()=> showView("home");
 
   document.getElementById("resetBtn").onclick = ()=>{
     if (confirm("¿Reiniciar todo tu avance? Esto borra qué tarjetas tienes dominadas o por repasar, y tu historial del examen.")){

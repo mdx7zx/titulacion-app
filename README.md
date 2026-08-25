@@ -14,6 +14,16 @@ La sección `Temario resuelto` integra contenido del PDF grande `GUIA EPAC. TEMA
 
 https://mdx7zx.github.io/titulacion-app/
 
+## Examen Integral
+
+Además de los exámenes de 10 y 20, hay un modo largo que cruza **todos los bancos a la vez**: 100 preguntas, 150 o el banco completo.
+
+No es solo para sacar una calificación. Elige las preguntas mirando tu historial —da prioridad a lo que fallaste, luego a lo que va a medias y a lo que no has visto, y mete algunas ya dominadas para comprobar que se te quedaron— y reparte el examen entre bancos y temas para que ninguno acapare. Al terminar muestra el desempeño por banco, por tema, la retención de lo que ya dominabas y una comparación de tu avance antes y después.
+
+**Una pregunta que ya alcanzó Dominada no pierde ese logro por fallarla después.** El error se registra como «necesita repaso», no como retroceso: el total histórico de Dominadas nunca baja. Así se distingue lo que ya aprendiste de lo que necesitas refrescar.
+
+Los bancos se detectan solos: si mañana se agrega uno nuevo, entra al Examen Integral sin tocar código.
+
 ## Cómo se guarda el avance
 
 Dos capas, y la primera nunca depende de internet:
