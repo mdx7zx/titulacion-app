@@ -1,12 +1,14 @@
 # Titulación
 
-App instalable de tarjetas de estudio para enfermería. Sesiones de repaso con repetición espaciada, exámenes de opción múltiple y minijuegos desbloqueables.
+App instalable de tarjetas de estudio para enfermería. Sesiones de repaso con repetición espaciada, exámenes de opción múltiple y 12 minijuegos desbloqueables.
+
+Cada pregunta del examen explica por qué la respuesta correcta lo es **y por qué falla cada opción que descartaste** — que es donde de verdad se aprende.
 
 Versión completa de Guía EPAC: incluye tarjetas integrales por tema del PDF `Guía Epac.pdf`, más un bloque de alto rendimiento con preguntas tipo examen, casos clínicos y datos clave.
 
 La sección `Temario resuelto` integra contenido del PDF grande `GUIA EPAC. TEMARIO RESUELTO .pdf`, enfocado en Legislación, Gerencia, Investigación cualitativa/cuantitativa y Teóricas.
 
-**410 tarjetas · 240 preguntas de examen · 2 secciones · 22 temas**
+**410 tarjetas · 217 preguntas de examen · 2 secciones · 22 temas · 12 juegos**
 
 ## App publicada
 
