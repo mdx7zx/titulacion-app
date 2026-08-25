@@ -2009,9 +2009,8 @@ function mergeQuiz(a, b){
   return out;
 }
 /* Juegos donde el mejor resultado es el MENOR (menos movimientos,
-   menos intentos). Hoy no hay ninguno; si se agrega uno, basta con
-   poner su id aqui para que la sincronizacion lo trate bien. */
-const MENOS_ES_MEJOR = new Set([]);
+   menos intentos). Lo usan recordScore y la sincronizacion. */
+const MENOS_ES_MEJOR = new Set(["numeros","puzzle","codigo"]);
 function mergeScores(a, b){
   const out = Object.assign({}, a);
   for (const id of Object.keys(b)){
@@ -2685,14 +2684,30 @@ function setDeck(name){
    JUEGOS (PREMIOS)
    ============================================================ */
 const GAMES = [
-  {id:"color",  name:"Color diferente",   emoji:"🎨", bg:"#E2F1EF", cost:10,
+  {id:"color",      name:"Color diferente",     emoji:"🎨", bg:"#E2F1EF", cost:10,
    desc:"Encuentra el cuadro de color distinto. La rejilla crece con cada acierto."},
-  {id:"simon",  name:"Secuencia",         emoji:"🧠", bg:"#EDEAF7", cost:25,
+  {id:"simon",      name:"Secuencia",           emoji:"🧠", bg:"#EDEAF7", cost:25,
    desc:"Memoriza y repite la secuencia de colores. Cada ronda suma uno más."},
-  {id:"calc",   name:"Cálculo veloz",     emoji:"➗", bg:"#F6ECD8", cost:45,
+  {id:"mayormenor", name:"Mayor o menor",       emoji:"⚖️", bg:"#E8EEF6", cost:35,
+   desc:"¿La comparación es verdadera o falsa? Responde rápido contra el reloj."},
+  {id:"calc",       name:"Cálculo veloz",       emoji:"➗", bg:"#F6ECD8", cost:45,
    desc:"Resuelve la mayor cantidad de operaciones en 60 segundos."},
-  {id:"stroop", name:"Colores y palabras",emoji:"👁️", bg:"#E4F3EC", cost:70,
+  {id:"calculadora",name:"Calculadora",         emoji:"🔢", bg:"#EAF0E8", cost:60,
+   desc:"Teclea el resultado de cada operación. 60 segundos."},
+  {id:"stroop",     name:"Colores y palabras",  emoji:"👁️", bg:"#F0E8F3", cost:70,
    desc:"Elige el COLOR de la tinta, no lo que dice la palabra. 3 vidas."},
+  {id:"panel",      name:"Panel oculto",        emoji:"🟩", bg:"#E4F3EC", cost:85,
+   desc:"Memoriza las casillas iluminadas; cuando se oculten, tócalas todas."},
+  {id:"cambio",     name:"Cambio exacto",       emoji:"🪙", bg:"#F6EFD8", cost:100,
+   desc:"Junta monedas hasta dar el cambio exacto. Cuantos más, mejor, en 60 s."},
+  {id:"maquina",    name:"Máquina matemática",  emoji:"🧮", bg:"#E8EEF6", cost:120,
+   desc:"Toca dos números que sumen el objetivo. 60 segundos."},
+  {id:"numeros",    name:"Puzzle de números",   emoji:"🔟", bg:"#E4EEF6", cost:140,
+   desc:"Ordena el taquín del 1 al 8 deslizando las fichas. ¡En los menos movimientos!"},
+  {id:"puzzle",     name:"Puzzle",              emoji:"🧩", bg:"#E9F1E6", cost:160,
+   desc:"Reconstruye la imagen deslizando las piezas hasta su lugar."},
+  {id:"codigo",     name:"Código secreto",      emoji:"🔐", bg:"#ECEAF4", cost:185,
+   desc:"Adivina el código de 4 cifras con las pistas de cada intento."},
 ];
 
 let gameTimers = [], currentGame = null;
@@ -2700,8 +2715,24 @@ function gT(t){ gameTimers.push(t); return t; }
 function clearGameTimers(){ gameTimers.forEach(t=>{ clearTimeout(t); clearInterval(t); }); gameTimers = []; }
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 function setGScore(v){ document.getElementById("gameScore").textContent = v; }
-function bestFor(id){ return gameScores[id] || 0; }
-function recordScore(id,v){ if (v > (gameScores[id]||0)){ gameScores[id]=v; persistGameScores(); return true; } return false; }
+function timedFoot(seconds, onEnd){
+  const foot = document.getElementById("gameFoot");
+  foot.innerHTML = '<div class="game-timebar"><span id="tBar" style="width:100%"></span></div><div class="game-msg" id="tMsg">⏱ '+seconds+' s</div>';
+  let left = seconds;
+  gT(setInterval(()=>{
+    left--;
+    const bar = document.getElementById("tBar"); if (bar) bar.style.width = (left/seconds*100)+"%";
+    const m = document.getElementById("tMsg"); if (m) m.textContent = "⏱ "+left+" s";
+    if (left <= 0) onEnd();
+  }, 1000));
+}
+function bestFor(id){ return gameScores[id]; }
+function recordScore(id,v){
+  const cur = gameScores[id];
+  const better = MENOS_ES_MEJOR.has(id) ? (cur==null || v<cur) : (cur==null || v>cur);
+  if (better){ gameScores[id] = v; persistGameScores(); return true; }
+  return false;
+}
 
 function openGames(){
   document.getElementById("gamesStars").textContent = "★ " + stars;
@@ -2736,10 +2767,13 @@ function playGame(id){
   document.getElementById("gameTitle").textContent = g.name;
   setGScore(0);
   showView("gameview");
-  if (id==="color") initColor();
-  else if (id==="simon") initSimon();
-  else if (id==="calc") initCalc();
-  else if (id==="stroop") initStroop();
+  const inits = {
+    color:initColor, mayormenor:initMayorMenor, calc:initCalc, calculadora:initCalculadora,
+    simon:initSimon, panel:initPanel, stroop:initStroop, cambio:initCambio,
+    maquina:initMaquina, numeros:()=>startSlider("numeros",3,false),
+    puzzle:()=>startSlider("puzzle",3,true), codigo:initCodigo
+  };
+  (inits[id] || initColor)();
 }
 
 function showGameOver(id, score, label){
@@ -2888,6 +2922,250 @@ function initStroop(){
     stage.appendChild(grid);
   }
   newQ();
+}
+
+/* --- 8 juegos adicionales --- */
+function initMayorMenor(){
+  let score=0, over=false;
+  const stage=document.getElementById("gameStage");
+  function q(){
+    if(over) return;
+    setGScore(score);
+    const a=rnd(1,99), b=rnd(1,99), op = Math.random()<.5 ? ">" : "<";
+    const truth = op===">" ? a>b : a<b;
+    stage.innerHTML='<div class="game-big">'+a+" "+op+" "+b+'</div>';
+    const grid=document.createElement("div"); grid.className="opt-grid";
+    [["Verdadero",true],["Falso",false]].forEach(pair=>{
+      const bt=document.createElement("button"); bt.className="game-opt"; bt.textContent=pair[0];
+      bt.onclick=()=>{ if(over)return; if(pair[1]===truth){ score++; q(); } else { bt.classList.add("no"); gT(setTimeout(q,350)); } };
+      grid.appendChild(bt);
+    });
+    stage.appendChild(grid);
+  }
+  timedFoot(60, ()=>{ over=true; showGameOver("mayormenor", score, "Aciertos"); });
+  q();
+}
+
+/* --- Calculadora (teclado) --- */
+function initCalculadora(){
+  let score=0, over=false, input="", a,b,op,ans;
+  const stage=document.getElementById("gameStage");
+  function gen(){
+    const ops=["+","−","×"]; op=ops[rnd(0,2)];
+    if(op==="+"){a=rnd(10,80);b=rnd(10,80);ans=a+b;}
+    else if(op==="−"){a=rnd(20,99);b=rnd(1,a-1);ans=a-b;}
+    else {a=rnd(2,12);b=rnd(2,12);ans=a*b;}
+    input=""; render();
+  }
+  function render(){
+    setGScore(score);
+    stage.innerHTML='';
+    const scr=document.createElement("div"); scr.className="game-big";
+    scr.innerHTML = a+" "+op+" "+b+' = <span style="color:var(--primary-deep)">'+(input||"?")+'</span>';
+    stage.appendChild(scr);
+    const pad=document.createElement("div"); pad.className="opt-grid"; pad.style.gridTemplateColumns="repeat(3,1fr)"; pad.style.maxWidth="240px";
+    ["1","2","3","4","5","6","7","8","9","⌫","0","OK"].forEach(k=>{
+      const bt=document.createElement("button"); bt.className="game-opt"; bt.textContent=k; bt.style.padding="14px"; bt.style.fontSize="1.1rem";
+      if(k==="OK") bt.style.color="var(--primary-deep)";
+      bt.onclick=()=>key(k);
+      pad.appendChild(bt);
+    });
+    stage.appendChild(pad);
+  }
+  function key(k){
+    if(over) return;
+    if(k==="⌫"){ input=input.slice(0,-1); render(); }
+    else if(k==="OK"){ if(input!=="" && parseInt(input,10)===ans){ score++; gen(); } else { input=""; render(); } }
+    else if(input.length<4){ input+=k; render(); }
+  }
+  timedFoot(60, ()=>{ over=true; showGameOver("calculadora", score, "Aciertos"); });
+  gen();
+}
+
+/* --- Panel oculto (memoria de patrón) --- */
+function initPanel(){
+  let round=1;
+  const stage=document.getElementById("gameStage");
+  const foot=document.getElementById("gameFoot");
+  function play(){
+    setGScore(round-1);
+    const n=Math.min(3+Math.floor((round-1)/2),6);
+    const k=Math.min(2+round, Math.floor(n*n*0.6));
+    const set=new Set(); while(set.size<k){ set.add(rnd(0,n*n-1)); }
+    stage.innerHTML='';
+    const grid=document.createElement("div"); grid.className="swatch-grid"; grid.style.gridTemplateColumns="repeat("+n+",1fr)"; grid.style.width="min(82vw,330px)";
+    const tiles=[];
+    for(let i=0;i<n*n;i++){ const b=document.createElement("button"); b.className="swatch"; b.style.background="var(--line-soft)"; grid.appendChild(b); tiles.push(b); }
+    stage.appendChild(grid);
+    foot.innerHTML='<div class="game-msg">Memoriza las casillas…</div>';
+    set.forEach(i=> tiles[i].style.background="var(--primary)");
+    gT(setTimeout(()=>{
+      set.forEach(i=> tiles[i].style.background="var(--line-soft)");
+      foot.innerHTML='<div class="game-msg">Ahora tócalas todas.</div>';
+      let found=0; const picked=new Set();
+      tiles.forEach((b,i)=>{
+        b.onclick=()=>{
+          if(picked.has(i)) return; picked.add(i);
+          if(set.has(i)){ b.style.background="var(--know)"; found++; if(found>=k){ round++; gT(setTimeout(play,500)); } }
+          else { b.style.background="var(--dont)"; gT(setTimeout(()=> showGameOver("panel", round-1, "Ronda"), 500)); }
+        };
+      });
+    }, 900 + k*220));
+  }
+  play();
+}
+
+/* --- Cambio exacto --- */
+function initCambio(){
+  let score=0, over=false, sum=0, target=0;
+  const DEN=[{v:10,t:"$0.10"},{v:50,t:"$0.50"},{v:100,t:"$1"},{v:200,t:"$2"},{v:500,t:"$5"},{v:1000,t:"$10"}];
+  const stage=document.getElementById("gameStage");
+  function fmt(c){ return "$"+(c/100).toFixed(2); }
+  function newTarget(){ target=rnd(3,99)*10; sum=0; render(); }
+  function render(){
+    setGScore(score);
+    stage.innerHTML='<div class="game-prompt">Da exactamente <b>'+fmt(target)+'</b></div><div class="game-big" style="font-size:1.6rem">'+fmt(sum)+'</div>';
+    const grid=document.createElement("div"); grid.className="opt-grid"; grid.style.gridTemplateColumns="repeat(3,1fr)";
+    DEN.forEach(d=>{
+      const bt=document.createElement("button"); bt.className="game-opt"; bt.textContent=d.t; bt.style.fontSize="1rem";
+      bt.onclick=()=>{ if(over)return; sum+=d.v;
+        if(sum===target){ score++; gT(setTimeout(newTarget,250)); }
+        else if(sum>target){ bt.classList.add("no"); gT(setTimeout(()=>{ sum=0; render(); },400)); }
+        else render(); };
+      grid.appendChild(bt);
+    });
+    stage.appendChild(grid);
+    const reset=document.createElement("button"); reset.className="game-btn ghost"; reset.textContent="↺ Reiniciar monto"; reset.style.marginTop="4px";
+    reset.onclick=()=>{ if(!over){ sum=0; render(); } };
+    stage.appendChild(reset);
+  }
+  timedFoot(60, ()=>{ over=true; showGameOver("cambio", score, "Cambios"); });
+  newTarget();
+}
+
+/* --- Máquina matemática (parejas que suman) --- */
+function initMaquina(){
+  let score=0, over=false;
+  const stage=document.getElementById("gameStage");
+  function round(){
+    if(over) return;
+    setGScore(score);
+    const n=4, nums=[]; for(let i=0;i<n*n;i++) nums.push(rnd(1,12));
+    const i1=rnd(0,n*n-1); let i2=rnd(0,n*n-1); while(i2===i1) i2=rnd(0,n*n-1);
+    const target=nums[i1]+nums[i2];
+    stage.innerHTML='<div class="game-prompt">Toca dos que sumen <b>'+target+'</b></div>';
+    const grid=document.createElement("div"); grid.className="swatch-grid"; grid.style.gridTemplateColumns="repeat("+n+",1fr)"; grid.style.width="min(86vw,360px)";
+    let first=null, firstBtn=null;
+    nums.forEach(v=>{
+      const b=document.createElement("button"); b.className="game-opt"; b.textContent=v; b.style.aspectRatio="1"; b.style.fontSize="1.1rem"; b.style.padding="0";
+      b.onclick=()=>{
+        if(over||firstBtn===b) return;
+        if(first===null){ first=v; firstBtn=b; b.classList.add("ok"); }
+        else if(first+v===target){ b.classList.add("ok"); score++; gT(setTimeout(round,300)); }
+        else { b.classList.add("no"); const fb=firstBtn; fb.classList.add("no"); gT(setTimeout(()=>{ b.classList.remove("no"); fb.classList.remove("ok","no"); first=null; firstBtn=null; },450)); }
+      };
+      grid.appendChild(b);
+    });
+    stage.appendChild(grid);
+  }
+  timedFoot(60, ()=>{ over=true; showGameOver("maquina", score, "Parejas"); });
+  round();
+}
+
+/* --- Taquín / Puzzle deslizante (compartido) --- */
+function startSlider(id, n, useImage){
+  const stage=document.getElementById("gameStage");
+  const foot=document.getElementById("gameFoot");
+  let board=[], blank=0, moves=0;
+  function solvedArr(){ const a=[]; for(let i=0;i<n*n-1;i++)a.push(i); a.push(null); return a; }
+  function isSolved(){ for(let i=0;i<n*n-1;i++) if(board[i]!==i) return false; return board[n*n-1]===null; }
+  function neighbors(idx){ const r=Math.floor(idx/n), c=idx%n, out=[]; if(r>0)out.push(idx-n); if(r<n-1)out.push(idx+n); if(c>0)out.push(idx-1); if(c<n-1)out.push(idx+1); return out; }
+  function shuffleBoard(){
+    board=solvedArr(); let bl=n*n-1;
+    for(let s=0;s<n*n*30;s++){ const ns=neighbors(bl); const nb=ns[rnd(0,ns.length-1)]; const t=board[bl]; board[bl]=board[nb]; board[nb]=t; bl=nb; }
+    blank=board.indexOf(null); moves=0;
+  }
+  function render(){
+    setGScore(moves);
+    stage.innerHTML='';
+    const grid=document.createElement("div"); grid.className="swatch-grid"; grid.style.gridTemplateColumns="repeat("+n+",1fr)"; grid.style.width="min(80vw,300px)";
+    board.forEach((val,i)=>{
+      const b=document.createElement("button"); b.className="game-opt"; b.style.aspectRatio="1"; b.style.fontSize="1.2rem"; b.style.padding="0";
+      if(val===null){ b.style.visibility="hidden"; }
+      else if(useImage){
+        const r=Math.floor(val/n), c=val%n;
+        b.style.background="linear-gradient(135deg,#0E8A82,#7C6FB0,#C2882B)";
+        b.style.backgroundSize=(n*100)+"% "+(n*100)+"%";
+        b.style.backgroundPosition=(c/(n-1)*100)+"% "+(r/(n-1)*100)+"%";
+        b.style.color="rgba(255,255,255,.9)"; b.style.fontWeight="700"; b.textContent=val+1;
+      } else { b.textContent=val+1; }
+      b.onclick=()=>{
+        if(neighbors(blank).includes(i)){
+          const t=board[blank]; board[blank]=board[i]; board[i]=t; blank=i; moves++;
+          if(isSolved()){ render(); gT(setTimeout(()=> showGameOver(id, moves, "Movimientos"),200)); }
+          else render();
+        }
+      };
+      grid.appendChild(b);
+    });
+    stage.appendChild(grid);
+  }
+  foot.innerHTML='<div class="game-msg">Ordena del 1 al '+(n*n-1)+' deslizando las fichas al hueco.</div>';
+  shuffleBoard(); if(isSolved()) shuffleBoard();
+  render();
+}
+
+/* --- Código secreto (estilo Mastermind) --- */
+function initCodigo(){
+  const LEN=4, MAXD=6, MAXTRIES=10;
+  const code=[]; for(let i=0;i<LEN;i++) code.push(rnd(1,MAXD));
+  let cur=[1,1,1,1], tries=0;
+  const stage=document.getElementById("gameStage");
+  const foot=document.getElementById("gameFoot");
+  const history=[];
+  function evalGuess(g){
+    let exact=0, partial=0; const cc=code.slice(), gg=g.slice();
+    for(let i=0;i<LEN;i++){ if(gg[i]===cc[i]){ exact++; cc[i]=-1; gg[i]=-2; } }
+    for(let i=0;i<LEN;i++){ if(gg[i]>0){ const j=cc.indexOf(gg[i]); if(j>=0){ partial++; cc[j]=-1; } } }
+    return {exact,partial};
+  }
+  function render(){
+    setGScore(tries);
+    let html='<div class="game-prompt">Adivina el código de '+LEN+' cifras (1–'+MAXD+')</div><div style="display:flex;flex-direction:column;gap:5px;margin:6px 0">';
+    history.forEach(h=>{
+      html+='<div style="display:flex;gap:10px;align-items:center;justify-content:center">'+
+        '<span style="font-weight:700;letter-spacing:4px;font-size:1.1rem">'+h.g.join(" ")+'</span>'+
+        '<span style="color:var(--know);font-weight:700">●'+h.r.exact+'</span>'+
+        '<span style="color:var(--mid);font-weight:700">○'+h.r.partial+'</span></div>';
+    });
+    html+='</div>';
+    stage.innerHTML=html;
+    const row=document.createElement("div"); row.className="opt-grid"; row.style.gridTemplateColumns="repeat("+LEN+",1fr)"; row.style.maxWidth="280px";
+    cur.forEach((d,i)=>{
+      const b=document.createElement("button"); b.className="game-opt"; b.textContent=d; b.style.fontSize="1.3rem";
+      b.onclick=()=>{ cur[i]=cur[i]%MAXD+1; render(); };
+      row.appendChild(b);
+    });
+    stage.appendChild(row);
+    const probe=document.createElement("button"); probe.className="game-btn"; probe.textContent="Probar"; probe.style.marginTop="8px";
+    probe.onclick=submit; stage.appendChild(probe);
+  }
+  function submit(){
+    tries++;
+    const r=evalGuess(cur); history.push({g:cur.slice(), r});
+    if(r.exact===LEN){ showGameOver("codigo", tries, "Intentos"); return; }
+    if(tries>=MAXTRIES){
+      clearGameTimers();
+      stage.innerHTML='<div class="game-big">¡Se acabaron los intentos!</div><div class="game-msg">El código era <b style="letter-spacing:4px">'+code.join(" ")+'</b></div>';
+      foot.innerHTML='<button class="game-btn" id="gAgain">Jugar de nuevo</button><button class="game-btn ghost" id="gBackList">Volver a juegos</button>';
+      document.getElementById("gAgain").onclick=()=>playGame("codigo");
+      document.getElementById("gBackList").onclick=()=>openGames();
+      return;
+    }
+    render();
+  }
+  foot.innerHTML='<div class="game-msg">● = cifra y lugar correctos · ○ = cifra correcta, lugar incorrecto</div>';
+  render();
 }
 
 /* ============================================================
