@@ -8,7 +8,7 @@ Versión completa de Guía EPAC: incluye tarjetas integrales por tema del PDF `G
 
 La sección `Temario resuelto` integra contenido del PDF grande `GUIA EPAC. TEMARIO RESUELTO .pdf`, enfocado en Legislación, Gerencia, Investigación cualitativa/cuantitativa y Teóricas.
 
-**410 tarjetas · 217 preguntas de examen · 2 secciones · 22 temas · 12 juegos**
+**410 tarjetas · 329 preguntas de examen · 2 secciones · 22 temas · 12 juegos**
 
 ## App publicada
 
